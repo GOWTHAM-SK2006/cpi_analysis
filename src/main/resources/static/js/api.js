@@ -8,30 +8,45 @@ const API_BASE = '/api';
 // ─── Generic fetch wrapper ────────────────────────────────────────────────────
 async function request(method, path, body = null) {
   const token = localStorage.getItem('cpi_token');
+  console.log(`[API Request] Method: ${method}, Path: ${API_BASE}${path}`);
+  
   const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log(`[API Request] JWT Token found in localStorage. Attaching 'Authorization: Bearer ${token.substring(0, 10)}...' header.`);
+  } else {
+    console.log('[API Request] No JWT token found in localStorage. Proceeding without Authorization header.');
+  }
 
   const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
 
-  const res = await fetch(`${API_BASE}${path}`, options);
+  try {
+    const res = await fetch(`${API_BASE}${path}`, options);
+    console.log(`[API Response] Received response for ${path} -> Status: ${res.status} ${res.statusText}`);
 
-  if (res.status === 401) {
-    // Token expired or invalid — redirect to login
-    localStorage.clear();
-    window.location.href = '/login.html';
-    return;
+    if (res.status === 401) {
+      console.warn('[API Response] 401 Unauthorized detected. Token may be expired or invalid. Clearing session and redirecting to login.html.');
+      localStorage.clear();
+      window.location.href = '/login.html';
+      return;
+    }
+
+    const data = res.headers.get('content-type')?.includes('application/json')
+      ? await res.json()
+      : null;
+
+    if (!res.ok) {
+      console.error(`[API Error] Request failed with status ${res.status}. Error payload:`, data);
+      throw new Error(data?.message || `Request failed (${res.status})`);
+    }
+
+    console.log(`[API Success] Request to ${path} completed successfully.`);
+    return data;
+  } catch (err) {
+    console.error(`[API Exception] Error during fetch request to ${path}:`, err);
+    throw err;
   }
-
-  const data = res.headers.get('content-type')?.includes('application/json')
-    ? await res.json()
-    : null;
-
-  if (!res.ok) {
-    throw new Error(data?.message || `Request failed (${res.status})`);
-  }
-
-  return data;
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────

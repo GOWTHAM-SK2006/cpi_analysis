@@ -43,30 +43,6 @@
     </div>
   </div>
 
-  <script type="module">
-    import { api } from './js/api.js';
-    import { saveSession, redirectIfLoggedIn } from './js/auth.js';
-    redirectIfLoggedIn();
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      const errEl = document.getElementById('error-msg');
-      btn.textContent = 'Signing in...'; btn.disabled = true;
-      errEl.classList.add('hidden');
-      try {
-        const data = await api.auth.login({
-          email:    document.getElementById('email').value.trim(),
-          password: document.getElementById('password').value,
-        });
-        saveSession(data);
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        errEl.textContent = err.message || 'Invalid email or password';
-        errEl.classList.remove('hidden');
-        btn.textContent = 'Sign In'; btn.disabled = false;
-      }
-    });
-  </script>
+  <script type="module" src="js/login.js"></script>
 </body>
 </html>

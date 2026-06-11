@@ -32,9 +32,19 @@ public class SecurityConfig {
             "/index.html",
             "/login.html",
             "/signup.html",
+            "/dashboard.html",
+            "/teams.html",
+            "/players.html",
+            "/player-detail.html",
+            "/practice-sessions.html",
+            "/practice-score.html",
+            "/match-sessions.html",
+            "/match-score.html",
+            "/reports.html",
             "/css/**",
             "/js/**",
-            "/favicon.ico"
+            "/favicon.ico",
+            "/*.html" // Fallback to permit any other root HTML files
     };
 
     @Bean

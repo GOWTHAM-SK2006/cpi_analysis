@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,8 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
 
     private final JwtUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
@@ -32,19 +36,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Extract the JWT from the Authorization header
-        String token = parseJwt(request);
+        String path = request.getRequestURI();
+        logger.debug("Processing request for URI: {}", path);
 
-        if (token != null && jwtUtils.validateToken(token)) {
-            String email = jwtUtils.getEmailFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        try {
+            // Extract the JWT from the Authorization header
+            String token = parseJwt(request);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+            if (token != null) {
+                logger.info("JWT Token found in Authorization header for path: {}", path);
+                if (jwtUtils.validateToken(token)) {
+                    String email = jwtUtils.getEmailFromToken(token);
+                    logger.info("JWT Token successfully validated. Authenticating email: {}", email);
+                    
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    logger.info("Successfully set security context authentication for email: {}", email);
+                } else {
+                    logger.warn("JWT Token validation failed for path: {}", path);
+                }
+            } else {
+                logger.debug("No JWT Token found in Authorization header for path: {}", path);
+            }
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication: {}", e.getMessage(), e);
         }
 
         filterChain.doFilter(request, response);
