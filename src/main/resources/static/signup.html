@@ -2,85 +2,91 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Sign Up — CPI Platform</title>
-  <meta name="description" content="Create your CPI coaching account and start tracking player performance.">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] },
           colors: {
-            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
+            }
           }
         }
       }
     }
   </script>
-  <style>
-    body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }
-    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
-      -webkit-box-shadow: 0 0 0px 1000px #141414 inset;
-      -webkit-text-fill-color: #fff;
-      caret-color: #fff;
-    }
-  </style>
 </head>
-<body class="text-gray-100 min-h-screen flex items-center justify-center px-4 py-8">
-
-  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-brand-orange/5 blur-3xl pointer-events-none"></div>
-
-  <div class="w-full max-w-md relative z-10">
-    <div class="text-center mb-8">
-      <a href="index.html" class="inline-block text-4xl font-black tracking-tight text-white">
-        CPI<span class="text-brand-orange">.</span>
-      </a>
-      <p class="text-brand-muted text-sm mt-2 font-medium">Cullinan Performance Index</p>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
+  
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between p-6 shadow-2xl relative border-x border-brand-border">
+    
+    <div class="flex justify-between items-center mt-4">
+      <div class="text-xs font-black tracking-widest text-brand-orange uppercase">CPI Platform</div>
+      <div class="w-2.5 h-2.5 rounded-full bg-brand-orange pulse-glow"></div>
     </div>
 
-    <div class="bg-brand-card border border-brand-border rounded-2xl p-8 shadow-2xl">
-      <h1 class="text-2xl font-extrabold text-white mb-1">Create your account</h1>
-      <p class="text-brand-muted text-sm mb-7">Start tracking performance for your cricket academy</p>
+    <div class="my-auto py-8">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-black tracking-tight text-white select-none">
+          CPI<span class="text-brand-orange">.</span>
+        </h1>
+        <p class="text-brand-muted text-xs font-semibold uppercase tracking-widest mt-2">Cricket Performance Index</p>
+      </div>
 
-      <div id="error-msg" class="hidden mb-5 bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 font-semibold"></div>
+      <div class="glass-card p-6 border border-brand-border">
+        <h2 class="text-xl font-bold text-white mb-1">Create Account</h2>
+        <p class="text-brand-muted text-xs mb-6">Register your academy and track performance</p>
 
-      <form id="signup-form" class="flex flex-col gap-5">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="name">Full Name</label>
-            <input id="name" type="text" placeholder="Your full name" required
-              class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+        <div id="error-msg" class="hidden mb-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl px-4 py-3 font-semibold"></div>
+
+        <form id="signup-form" class="flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="name">Full Name</label>
+              <input id="name" type="text" placeholder="Coach Name" required
+                class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="academy">Academy</label>
+              <input id="academy" type="text" placeholder="Academy Name" required
+                class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="academy">Academy Name</label>
-            <input id="academy" type="text" placeholder="Your academy" required
-              class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="email">Email Address</label>
+            <input id="email" type="email" placeholder="coach@academy.com" required
+              class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
           </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="email">Email Address</label>
-          <input id="email" type="email" placeholder="coach@academy.com" required
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="password">Password</label>
-          <input id="password" type="password" placeholder="Min 6 characters" required minlength="6"
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
-        </div>
-        <button type="submit" id="submit-btn"
-          class="w-full bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-orange-500/15 active:scale-[0.98] mt-2">
-          Create Account
-        </button>
-      </form>
+          <div>
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="password">Password</label>
+            <input id="password" type="password" placeholder="Min 6 characters" required minlength="6"
+              class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+          </div>
+          <button type="submit" id="submit-btn"
+            class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 click-bounce mt-2">
+            Create Account
+          </button>
+        </form>
+      </div>
+    </div>
 
-      <p class="text-center text-xs text-brand-muted mt-6">
+    <div class="text-center pb-4">
+      <p class="text-xs text-brand-muted">
         Already have an account?
-        <a href="login.html" class="text-brand-orange font-semibold hover:underline ml-1">Sign in →</a>
+        <a href="login.html" class="text-brand-orange font-bold hover:underline ml-1">Sign In →</a>
       </p>
     </div>
+
   </div>
 
   <script type="module">
@@ -93,7 +99,7 @@
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
       const errEl = document.getElementById('error-msg');
-      btn.textContent = 'Creating account...'; btn.disabled = true;
+      btn.textContent = 'Creating...'; btn.disabled = true;
       errEl.classList.add('hidden');
       try {
         const data = await api.auth.signup({
@@ -105,7 +111,7 @@
         saveSession(data);
         window.location.href = 'dashboard.html';
       } catch (err) {
-        errEl.textContent = err.message || 'Signup failed. Please try again.';
+        errEl.textContent = err.message || 'Signup failed';
         errEl.classList.remove('hidden');
         btn.textContent = 'Create Account'; btn.disabled = false;
       }

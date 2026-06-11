@@ -2,85 +2,98 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Match Sessions — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] },
           colors: {
-            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
+            }
           }
         }
       }
     }
   </script>
-  <style>body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }</style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-white">Match Sessions</h1>
-        <p class="text-brand-muted text-sm mt-1">Log matches and score player performance</p>
-      </div>
-      <button id="add-session-btn"
-        class="bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-orange-500/15 active:scale-[0.98]">
-        + New Match
-      </button>
-    </div>
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Header Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <!-- Sessions List -->
-    <div id="sessions-list" class="flex flex-col gap-3"></div>
-
-    <!-- Empty State -->
-    <div id="sessions-empty" class="hidden bg-brand-card border border-brand-border rounded-2xl p-12 text-center shadow-2xl">
-      <div class="text-5xl mb-4">🏏</div>
-      <h3 class="text-lg font-bold text-white">No match sessions yet</h3>
-      <p class="text-brand-muted text-sm mt-1 mb-5">Log your first match and start scoring MPI for your players.</p>
-      <button class="bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl transition-all"
-        onclick="document.getElementById('add-session-btn').click()">+ New Match</button>
-    </div>
-  </main>
-
-  <!-- Match Session Modal -->
-  <div id="session-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm items-center justify-center px-4">
-    <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-md shadow-2xl">
-      <div class="flex items-center justify-between p-6 border-b border-brand-border">
-        <h2 class="text-lg font-bold text-white">New Match Session</h2>
-        <button class="modal-close text-brand-muted hover:text-white transition-colors text-xl leading-none">✕</button>
-      </div>
-      <form id="session-form" class="p-6 flex flex-col gap-5">
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Page Title Header -->
+      <div class="flex items-center justify-between">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Team *</label>
+          <h1 class="text-xl font-black text-white">Matches</h1>
+          <p class="text-[11px] text-brand-muted mt-0.5">Log match logs and grade MPI</p>
+        </div>
+        <button id="add-session-btn"
+          class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce shadow-lg shadow-brand-orange/15">
+          + New Match
+        </button>
+      </div>
+
+      <!-- Sessions List -->
+      <div id="sessions-list" class="flex flex-col gap-3"></div>
+
+      <!-- Empty State -->
+      <div id="sessions-empty" class="hidden glass-card border border-brand-border p-8 text-center">
+        <div class="text-4xl mb-3">🏏</div>
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider">No Matches Logged</h3>
+        <p class="text-[10px] text-brand-muted mt-2 mb-5">Create a match log when your squads play a game, then grade athlete performance metrics.</p>
+        <button class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce"
+          onclick="document.getElementById('add-session-btn').click()">+ Log Match</button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Match Session Modal Dialog -->
+  <div id="session-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm items-center justify-center px-4">
+    <div class="glass-modal border border-brand-border rounded-2xl w-full max-w-xs md:max-w-sm shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-5 border-b border-brand-border">
+        <h2 class="text-sm font-black text-white uppercase tracking-wider">New Match Session</h2>
+        <button class="modal-close text-brand-muted hover:text-white transition-colors text-lg">✕</button>
+      </div>
+      <form id="session-form" class="p-5 flex flex-col gap-4">
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Team *</label>
           <select id="session-team" required
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Opponent *</label>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Opponent *</label>
           <input id="session-opponent" type="text" placeholder="e.g. City Cricket Club" required
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Date *</label>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Date *</label>
           <input id="session-date" type="date" required
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all [color-scheme:dark]">
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all [color-scheme:dark]">
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Notes</label>
-          <textarea id="session-notes" placeholder="Optional match notes..." rows="3"
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all resize-none"></textarea>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Notes</label>
+          <textarea id="session-notes" placeholder="Optional notes (e.g. 50-over match)..." rows="3"
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all resize-none"></textarea>
         </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" class="btn-cancel flex-1 bg-brand-bg border border-brand-border text-gray-300 font-bold text-sm py-3 rounded-xl hover:border-gray-500 transition-all">Cancel</button>
-          <button type="submit" class="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm py-3 rounded-xl transition-all">Create Match</button>
+        <div class="flex gap-2 pt-2">
+          <button type="button" class="btn-cancel flex-1 bg-[#0d0d0d] border border-brand-border text-gray-300 font-bold text-xs py-3 rounded-xl hover:border-gray-500 transition-all click-bounce">Cancel</button>
+          <button type="submit" class="flex-1 bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">Save Log</button>
         </div>
       </form>
     </div>

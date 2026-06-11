@@ -2,212 +2,179 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dashboard — CPI Platform</title>
   <meta name="description" content="Elite cricket performance analytics platform. Track PPI, MPI, and CPI for your academy.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Outfit', 'sans-serif'],
-          },
           colors: {
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              glow: 'rgba(255, 122, 0, 0.15)',
-              bg: '#0B0B0B',
-              card: '#141414',
-              border: '#222222',
-              muted: '#7F7F7F',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
             }
           }
         }
       }
     }
   </script>
-  <style>
-    body {
-      background-color: #0B0B0B;
-      font-family: 'Outfit', sans-serif;
-    }
-    .custom-shadow {
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    }
-    .glow-hover:hover {
-      box-shadow: 0 0 20px rgba(255, 122, 0, 0.15);
-      border-color: #FF7A00;
-    }
-  </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
-    <!-- Header -->
-    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-white">Dashboard</h1>
-        <p class="text-brand-muted text-sm mt-1">Your academy performance overview & analytics</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="text-xs bg-brand-glow text-brand-orange border border-brand-orange/20 px-3 py-1.5 rounded-full font-semibold">
-          ⚡ Elite Plan Active
-        </span>
-      </div>
-    </div>
+  <!-- Main Phone Simulator Screen Wrapper -->
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Top Bar Navigation Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <!-- KPI Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-      <!-- Teams -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-brand-muted text-sm font-medium">Total Teams</span>
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">🛡️</div>
-        </div>
-        <div class="text-3xl font-black text-white" id="total-teams">—</div>
-        <p class="text-xs text-green-500 mt-2 flex items-center gap-1 font-semibold">
-          <span>Active squads</span>
-        </p>
-      </div>
-
-      <!-- Players -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-brand-muted text-sm font-medium">Total Players</span>
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">👤</div>
-        </div>
-        <div class="text-3xl font-black text-white" id="total-players">—</div>
-        <p class="text-xs text-brand-muted mt-2 flex items-center gap-1">
-          <span>Registered athletes</span>
-        </p>
-      </div>
-
-      <!-- Academy CPI -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-brand-muted text-sm font-medium">Academy CPI</span>
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">⚡</div>
-        </div>
-        <div class="text-3xl font-black" id="avg-cpi">—</div>
-        <p class="text-xs text-brand-muted mt-2 flex items-center gap-1">
-          <span>Combined performance index</span>
-        </p>
-      </div>
-
-      <!-- Total Sessions -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-brand-muted text-sm font-medium">Total Sessions</span>
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">🎯</div>
-        </div>
-        <div class="text-3xl font-black text-white" id="total-sessions">—</div>
-        <p class="text-xs text-brand-orange mt-2 flex items-center gap-1 font-semibold">
-          <span>Practice & match logs</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Left 2 Columns: Charts & Actions -->
-      <div class="lg:col-span-2 flex flex-col gap-8">
-        <!-- Analytics Chart -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 custom-shadow">
-          <div class="flex items-center justify-between mb-6">
-            <div>
-              <h2 class="text-lg font-bold text-white">Performance Analytics</h2>
-              <p class="text-xs text-brand-muted mt-1">Average PPI and MPI scoring over time</p>
-            </div>
-            <div class="flex gap-2">
-              <span class="inline-flex items-center gap-1.5 text-xs text-brand-orange bg-brand-orange/10 px-2.5 py-1 rounded-md border border-brand-orange/20">
-                <span class="w-2 h-2 rounded-full bg-brand-orange"></span> PPI (Practice)
-              </span>
-              <span class="inline-flex items-center gap-1.5 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-md border border-gray-700">
-                <span class="w-2 h-2 rounded-full bg-gray-400"></span> MPI (Match)
-              </span>
-            </div>
+    <!-- Scrollable content area -->
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Top Profile Welcome Section -->
+      <div class="flex items-center justify-between bg-brand-card/40 border border-brand-border/60 rounded-2xl p-4">
+        <div class="flex items-center gap-3">
+          <!-- Coach Profile Avatar -->
+          <div class="w-12 h-12 rounded-full bg-brand-orange/20 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-xl font-black shadow-inner">
+            👤
           </div>
-          <div class="h-80 w-full relative">
+          <div>
+            <div class="text-xs text-brand-muted font-bold uppercase tracking-wider">Welcome Back</div>
+            <h1 class="text-base font-extrabold text-white" id="welcome-coach">Coach</h1>
+            <p class="text-[10px] text-brand-orange font-semibold" id="academy-name-sub"></p>
+          </div>
+        </div>
+        <div>
+          <span class="text-[9px] bg-brand-orange/10 border border-brand-orange/20 text-brand-orange px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+            ⚡ ELITE COACH
+          </span>
+        </div>
+      </div>
+
+      <!-- KPI cards slider / list -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Teams -->
+        <div class="glass-card p-4 flex flex-col justify-between border border-brand-border min-h-[105px]">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider">Total Teams</span>
+            <span class="text-sm">🛡️</span>
+          </div>
+          <div class="text-2xl font-black text-white mt-2" id="total-teams">—</div>
+        </div>
+        <!-- Players -->
+        <div class="glass-card p-4 flex flex-col justify-between border border-brand-border min-h-[105px]">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider">Total Players</span>
+            <span class="text-sm">🏃</span>
+          </div>
+          <div class="text-2xl font-black text-white mt-2" id="total-players">—</div>
+        </div>
+        <!-- Academy CPI -->
+        <div class="glass-card p-4 flex flex-col justify-between border border-brand-border min-h-[105px]">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider">Academy CPI</span>
+            <span class="text-sm">⚡</span>
+          </div>
+          <div class="text-2xl font-black mt-2" id="avg-cpi">—</div>
+        </div>
+        <!-- Active Sessions -->
+        <div class="glass-card p-4 flex flex-col justify-between border border-brand-border min-h-[105px]">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider">Active Sessions</span>
+            <span class="text-sm">🎯</span>
+          </div>
+          <div class="text-2xl font-black text-white mt-2" id="total-sessions">—</div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="space-y-4">
+        
+        <!-- Chart 1: CPI Trend Line Chart -->
+        <div class="glass-card p-5 border border-brand-border">
+          <div class="mb-4">
+            <h3 class="text-xs font-bold text-brand-muted uppercase tracking-widest">CPI Trend</h3>
+            <p class="text-sm font-extrabold text-white mt-0.5">Practice vs Match Scores</p>
+          </div>
+          <div class="h-48 w-full relative">
             <canvas id="performanceChart"></canvas>
           </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 custom-shadow">
-          <h2 class="text-lg font-bold text-white mb-5">Quick Actions</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <a href="teams.html" class="flex flex-col items-center justify-center p-4 rounded-xl border border-brand-border bg-brand-bg hover:border-brand-orange hover:bg-brand-orange/5 transition-all group">
-              <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">🛡️</span>
-              <span class="text-xs font-semibold text-gray-300 group-hover:text-brand-orange">+ New Team</span>
-            </a>
-            <a href="players.html" class="flex flex-col items-center justify-center p-4 rounded-xl border border-brand-border bg-brand-bg hover:border-brand-orange hover:bg-brand-orange/5 transition-all group">
-              <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">👤</span>
-              <span class="text-xs font-semibold text-gray-300 group-hover:text-brand-orange">+ Add Player</span>
-            </a>
-            <a href="practice-sessions.html" class="flex flex-col items-center justify-center p-4 rounded-xl border border-brand-border bg-brand-bg hover:border-brand-orange hover:bg-brand-orange/5 transition-all group">
-              <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">🎯</span>
-              <span class="text-xs font-semibold text-gray-300 group-hover:text-brand-orange">+ Log Practice</span>
-            </a>
-            <a href="match-sessions.html" class="flex flex-col items-center justify-center p-4 rounded-xl border border-brand-border bg-brand-bg hover:border-brand-orange hover:bg-brand-orange/5 transition-all group">
-              <span class="text-2xl mb-2 group-hover:scale-110 transition-transform">🏏</span>
-              <span class="text-xs font-semibold text-gray-300 group-hover:text-brand-orange">+ Log Match</span>
-            </a>
+        <!-- Chart 2: Performance Breakdown Radar -->
+        <div class="glass-card p-5 border border-brand-border">
+          <div class="mb-4">
+            <h3 class="text-xs font-bold text-brand-muted uppercase tracking-widest">Pillars Breakdown</h3>
+            <p class="text-sm font-extrabold text-white mt-0.5">Academy Pillars Analysis</p>
           </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Insights & Stepper -->
-      <div class="flex flex-col gap-8">
-        <!-- Radar Breakdown -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 custom-shadow">
-          <h2 class="text-lg font-bold text-white mb-2">Pillars Breakdown</h2>
-          <p class="text-xs text-brand-muted mb-4">Academy scoring averages across pillars</p>
-          <div class="h-64 w-full flex items-center justify-center relative">
+          <div class="h-48 w-full relative">
             <canvas id="pillarsChart"></canvas>
           </div>
         </div>
+      </div>
 
-        <!-- Guide -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 custom-shadow">
-          <h2 class="text-lg font-bold text-white mb-1">Getting Started</h2>
-          <p class="text-xs text-brand-muted mb-6">Master the CPI platform with this guide</p>
-          
-          <div class="relative pl-8 border-l border-brand-border space-y-6">
-            <!-- Step 1 -->
-            <div class="relative">
-              <div class="absolute -left-11 top-0 w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center text-xs font-extrabold text-brand-bg">1</div>
-              <h4 class="text-sm font-semibold text-white">Create Teams</h4>
-              <p class="text-xs text-brand-muted mt-1">Set up squads in your cricket academy under <a href="teams.html" class="text-brand-orange hover:underline">Teams</a>.</p>
-            </div>
-            <!-- Step 2 -->
-            <div class="relative">
-              <div class="absolute -left-11 top-0 w-6 h-6 rounded-full bg-brand-border flex items-center justify-center text-xs font-bold text-gray-400">2</div>
-              <h4 class="text-sm font-semibold text-white">Add Players</h4>
-              <p class="text-xs text-brand-muted mt-1">Register athletes and assign them to respective squads under <a href="players.html" class="text-brand-orange hover:underline">Players</a>.</p>
-            </div>
-            <!-- Step 3 -->
-            <div class="relative">
-              <div class="absolute -left-11 top-0 w-6 h-6 rounded-full bg-brand-border flex items-center justify-center text-xs font-bold text-gray-400">3</div>
-              <h4 class="text-sm font-semibold text-white">Log Sessions & Score</h4>
-              <p class="text-xs text-brand-muted mt-1">Submit practice or match logs and rate players across the performance pillars.</p>
-            </div>
-            <!-- Step 4 -->
-            <div class="relative">
-              <div class="absolute -left-11 top-0 w-6 h-6 rounded-full bg-brand-border flex items-center justify-center text-xs font-bold text-gray-400">4</div>
-              <h4 class="text-sm font-semibold text-white">View Performance Reports</h4>
-              <p class="text-xs text-brand-muted mt-1">Explore detailed team and player performance analytics on the <a href="reports.html" class="text-brand-orange hover:underline">Reports</a> page.</p>
-            </div>
+      <!-- Recent Activity Section -->
+      <div class="space-y-4">
+        <h2 class="text-xs font-bold text-brand-muted uppercase tracking-widest">Recent Activities</h2>
+        
+        <!-- Practices activity -->
+        <div class="glass-card p-4 border border-brand-border">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider">Recent Practices</span>
+            <a href="practice-sessions.html" class="text-[9px] font-bold text-brand-muted hover:text-white transition-colors">View All →</a>
+          </div>
+          <div id="recent-practices" class="flex flex-col gap-2">
+            <div class="text-xs text-brand-muted py-2">Loading latest sessions...</div>
+          </div>
+        </div>
+
+        <!-- Matches activity -->
+        <div class="glass-card p-4 border border-brand-border">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-[10px] font-bold text-brand-orange uppercase tracking-wider">Recent Matches</span>
+            <a href="match-sessions.html" class="text-[9px] font-bold text-brand-muted hover:text-white transition-colors">View All →</a>
+          </div>
+          <div id="recent-matches" class="flex flex-col gap-2">
+            <div class="text-xs text-brand-muted py-2">Loading latest matches...</div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+
+      <!-- Interactive Stepper Guide -->
+      <div class="glass-card p-5 border border-brand-border">
+        <h2 class="text-xs font-bold text-brand-muted uppercase tracking-widest mb-1">Getting Started</h2>
+        <p class="text-[11px] text-brand-muted mb-6">Setup walkthrough for CPI platform</p>
+        
+        <div class="relative pl-6 border-l border-brand-orange/30 space-y-6">
+          <div class="relative">
+            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center text-[10px] font-black text-brand-bg">1</div>
+            <h4 class="text-xs font-bold text-white">Create Teams</h4>
+            <p class="text-[10px] text-brand-muted mt-1">Configure squads in your academy under <a href="teams.html" class="text-brand-orange hover:underline font-bold">Teams</a>.</p>
+          </div>
+          <div class="relative">
+            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-brand-card border border-brand-border flex items-center justify-center text-[10px] font-bold text-gray-400">2</div>
+            <h4 class="text-xs font-bold text-white">Add Players</h4>
+            <p class="text-[10px] text-brand-muted mt-1">Register athletes and assign squads under <a href="players.html" class="text-brand-orange hover:underline font-bold">Players</a>.</p>
+          </div>
+          <div class="relative">
+            <div class="absolute -left-9 top-0.5 w-6 h-6 rounded-full bg-brand-card border border-brand-border flex items-center justify-center text-[10px] font-bold text-gray-400">3</div>
+            <h4 class="text-xs font-bold text-white">Log & Score</h4>
+            <p class="text-[10px] text-brand-muted mt-1">Log practice or match score logs to rate player performance indices.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
 
   <script type="module" src="js/dashboard.js"></script>
 </body>

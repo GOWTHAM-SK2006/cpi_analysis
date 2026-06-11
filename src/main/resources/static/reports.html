@@ -2,109 +2,132 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Reports — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Outfit', 'sans-serif'],
-          },
           colors: {
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              glow: 'rgba(255, 122, 0, 0.15)',
-              bg: '#0B0B0B',
-              card: '#141414',
-              border: '#222222',
-              muted: '#7F7F7F',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
             }
           }
         }
       }
     }
   </script>
-  <style>
-    body {
-      background-color: #0B0B0B;
-      font-family: 'Outfit', sans-serif;
-    }
-    .custom-shadow {
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    }
-    .glow-hover:hover {
-      box-shadow: 0 0 20px rgba(255, 122, 0, 0.15);
-      border-color: #FF7A00;
-    }
-  </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-extrabold tracking-tight text-white">Reports</h1>
-      <p class="text-brand-muted text-sm mt-1">Generate and analyze player and team performance reports</p>
-    </div>
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Navigation Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-      <!-- Player Report Card -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">👤</div>
-          <div>
-            <h2 class="text-lg font-bold text-white">Player Report</h2>
-            <p class="text-xs text-brand-muted">Individual performance index metrics</p>
-          </div>
-        </div>
-        
-        <div class="mb-6">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Select Player</label>
-          <select id="report-player" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
-        </div>
-        
-        <button id="gen-player-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-brand-bg font-extrabold text-sm py-3 px-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 active:scale-[0.98]">
-          Generate Player Report
-        </button>
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Top Title Bar -->
+      <div>
+        <h1 class="text-xl font-black text-white">Reports Center</h1>
+        <p class="text-[11px] text-brand-muted mt-0.5">Generate and manage cricket performance metrics</p>
       </div>
 
-      <!-- Team Report Card -->
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">🛡️</div>
-          <div>
-            <h2 class="text-lg font-bold text-white">Team Report</h2>
-            <p class="text-xs text-brand-muted">Consolidated team performance index metrics</p>
+      <!-- High-Level Stats Dashboard Cards -->
+      <div class="grid grid-cols-3 gap-2">
+        <!-- Top Performer -->
+        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
+          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Top Performer</span>
+          <div class="text-[11px] font-bold text-white truncate mt-1" id="top-player-name">Loading...</div>
+          <span class="text-[9px] text-brand-orange font-bold mt-1" id="top-player-val">—</span>
+        </div>
+        <!-- Best Team -->
+        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
+          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Best Team</span>
+          <div class="text-[11px] font-bold text-white truncate mt-1" id="top-team-name">Loading...</div>
+          <span class="text-[9px] text-brand-orange font-bold mt-1" id="top-team-val">—</span>
+        </div>
+        <!-- Average CPI -->
+        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
+          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Average CPI</span>
+          <div class="text-[14px] font-black mt-1" id="avg-cpi-val">—</div>
+          <span class="text-[8px] text-brand-muted mt-0.5">Academy CPI</span>
+        </div>
+      </div>
+
+      <!-- Generator Forms -->
+      <div class="space-y-4">
+        
+        <!-- Player Report Generator Card -->
+        <div class="glass-card p-4 border border-brand-border">
+          <div class="flex items-center gap-3.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center text-brand-orange text-sm">👤</div>
+            <div>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Player Report Generator</h3>
+              <p class="text-[9px] text-brand-muted">Individual scoring & indices</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3">
+            <select id="report-player" class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
+              <option value="">Select Player</option>
+            </select>
+            <button id="gen-player-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">
+              Generate Player Report
+            </button>
           </div>
         </div>
-        
-        <div class="mb-6">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Select Team</label>
-          <select id="report-team" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
+
+        <!-- Team Report Generator Card -->
+        <div class="glass-card p-4 border border-brand-border">
+          <div class="flex items-center gap-3.5 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center text-brand-orange text-sm">🛡️</div>
+            <div>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Team Report Generator</h3>
+              <p class="text-[9px] text-brand-muted">Consolidated team squads indices</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3">
+            <select id="report-team" class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
+              <option value="">Select Team</option>
+            </select>
+            <button id="gen-team-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">
+              Generate Team Report
+            </button>
+          </div>
         </div>
-        
-        <button id="gen-team-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-brand-bg font-extrabold text-sm py-3 px-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 active:scale-[0.98]">
-          Generate Team Report
-        </button>
+
       </div>
-    </div>
 
-    <!-- Output Section -->
-    <div id="report-output" class="space-y-6"></div>
+      <!-- Recent Reports Section -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-bold text-brand-muted uppercase tracking-widest">Recent Reports</h3>
+        <div id="recent-reports-list" class="flex flex-col gap-2">
+          <!-- Populated via localStorage history -->
+          <div class="text-[10px] text-brand-muted py-2">No recent reports generated.</div>
+        </div>
+      </div>
 
-    <!-- Empty State -->
-    <div id="reports-empty" class="bg-brand-card border border-brand-border rounded-2xl p-12 text-center custom-shadow">
-      <div class="text-5xl mb-4">📊</div>
-      <h3 class="text-lg font-bold text-white">Select a player or team above</h3>
-      <p class="text-brand-muted text-sm mt-1 max-w-sm mx-auto">Click "Generate Report" to visualize performance rankings and historical scores.</p>
-    </div>
-  </main>
+      <!-- Output Section -->
+      <div id="report-output" class="space-y-4"></div>
+
+      <!-- Empty State -->
+      <div id="reports-empty" class="glass-card p-8 text-center border border-brand-border">
+        <div class="text-4xl mb-3">📊</div>
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Awaiting Generation</h3>
+        <p class="text-[10px] text-brand-muted mt-2 max-w-xs mx-auto">Select a player or squad to calculate live rankings and index analysis.</p>
+      </div>
+
+    </main>
+
+  </div>
 
   <script type="module" src="js/reports.js"></script>
 </body>

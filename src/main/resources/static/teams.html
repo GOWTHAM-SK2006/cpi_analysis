@@ -2,82 +2,95 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Teams — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] },
           colors: {
-            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
+            }
           }
         }
       }
     }
   </script>
-  <style>body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }</style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-white">Teams</h1>
-        <p class="text-brand-muted text-sm mt-1">Create and manage your squads</p>
-      </div>
-      <button id="add-team-btn"
-        class="bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-orange-500/15 active:scale-[0.98]">
-        + New Team
-      </button>
-    </div>
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Header Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <!-- Search -->
-    <div class="relative mb-6">
-      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted text-sm">🔍</span>
-      <input id="search-input" type="text" placeholder="Search teams..."
-        class="w-full bg-brand-card border border-brand-border rounded-xl pl-10 pr-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
-    </div>
-
-    <!-- Teams List -->
-    <div id="teams-list" class="flex flex-col gap-3"></div>
-
-    <!-- Empty State -->
-    <div id="teams-empty" class="hidden bg-brand-card border border-brand-border rounded-2xl p-12 text-center shadow-2xl">
-      <div class="text-5xl mb-4">🛡️</div>
-      <h3 class="text-lg font-bold text-white">No teams yet</h3>
-      <p class="text-brand-muted text-sm mt-1 mb-5">Create your first squad to start managing players.</p>
-      <button class="bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-xl transition-all"
-        onclick="document.getElementById('add-team-btn').click()">+ New Team</button>
-    </div>
-  </main>
-
-  <!-- Team Modal -->
-  <div id="team-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm items-center justify-center px-4">
-    <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-md shadow-2xl">
-      <div class="flex items-center justify-between p-6 border-b border-brand-border">
-        <h2 class="text-lg font-bold text-white" id="modal-title">New Team</h2>
-        <button class="modal-close text-brand-muted hover:text-white transition-colors text-xl leading-none">✕</button>
-      </div>
-      <form id="team-form" class="p-6 flex flex-col gap-5">
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Page Title Header -->
+      <div class="flex items-center justify-between">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Team Name *</label>
+          <h1 class="text-xl font-black text-white">Academy Teams</h1>
+          <p class="text-[11px] text-brand-muted mt-0.5">Manage and organize your rosters</p>
+        </div>
+        <button id="add-team-btn"
+          class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce shadow-lg shadow-brand-orange/15">
+          + New Team
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted text-xs">🔍</span>
+        <input id="search-input" type="text" placeholder="Search squads..."
+          class="w-full bg-brand-card border border-brand-border rounded-xl pl-10 pr-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+      </div>
+
+      <!-- Teams List -->
+      <div id="teams-list" class="flex flex-col gap-3"></div>
+
+      <!-- Empty State -->
+      <div id="teams-empty" class="hidden glass-card border border-brand-border p-8 text-center">
+        <div class="text-4xl mb-3">🛡️</div>
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider">No Squads Registered</h3>
+        <p class="text-[10px] text-brand-muted mt-2 mb-5">Create your first academy squad to start tracking performance indexes.</p>
+        <button class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce"
+          onclick="document.getElementById('add-team-btn').click()">+ Create Team</button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Team Creation / Edition Modal Dialogue -->
+  <div id="team-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm items-center justify-center px-4">
+    <div class="glass-modal border border-brand-border rounded-2xl w-full max-w-xs md:max-w-sm shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-5 border-b border-brand-border">
+        <h2 class="text-sm font-black text-white uppercase tracking-wider" id="modal-title">New Team</h2>
+        <button class="modal-close text-brand-muted hover:text-white transition-colors text-lg">✕</button>
+      </div>
+      <form id="team-form" class="p-5 flex flex-col gap-4">
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Team Name *</label>
           <input id="team-name" type="text" placeholder="e.g. Under-19 Squad" required
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Description</label>
-          <textarea id="team-desc" placeholder="Optional notes about this team" rows="3"
-            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all resize-none"></textarea>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Description</label>
+          <textarea id="team-desc" placeholder="Optional notes about this squad" rows="3"
+            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all resize-none"></textarea>
         </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" class="btn-cancel flex-1 bg-brand-bg border border-brand-border text-gray-300 font-bold text-sm py-3 rounded-xl hover:border-gray-500 transition-all">Cancel</button>
-          <button type="submit" class="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm py-3 rounded-xl transition-all">Save Team</button>
+        <div class="flex gap-2 pt-2">
+          <button type="button" class="btn-cancel flex-1 bg-[#0d0d0d] border border-brand-border text-gray-300 font-bold text-xs py-3 rounded-xl hover:border-gray-500 transition-all click-bounce">Cancel</button>
+          <button type="submit" class="flex-1 bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">Save Team</button>
         </div>
       </form>
     </div>

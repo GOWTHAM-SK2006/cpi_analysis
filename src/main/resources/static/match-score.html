@@ -2,45 +2,55 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>MPI Scoring — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] },
           colors: {
-            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
+            }
           }
         }
       }
     }
   </script>
-  <style>
-    body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }
-    input[type=range] { accent-color: #FF7A00; }
-  </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-5xl flex-grow">
-    <!-- Back + Header -->
-    <div class="mb-8">
-      <a href="match-sessions.html"
-        class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-xs font-bold mb-4 transition-colors">
-        ← Back to Matches
-      </a>
-      <h1 class="text-3xl font-extrabold tracking-tight text-white">MPI Scoring</h1>
-      <p class="text-brand-muted text-sm mt-1">Rate each player across 5 match performance pillars (1–10)</p>
-    </div>
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Header Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <!-- Score Cards List -->
-    <div id="score-list" class="flex flex-col gap-6"></div>
-  </main>
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Back to list & title -->
+      <div>
+        <a href="match-sessions.html"
+          class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-[10px] font-black uppercase tracking-wider mb-3 transition-colors">
+          ← Back to Matches
+        </a>
+        <h1 class="text-xl font-black text-white">MPI Grading</h1>
+        <p class="text-[11px] text-brand-muted mt-0.5">Rate players across 5 match pillars (1-10)</p>
+      </div>
+
+      <!-- Score Cards List -->
+      <div id="score-list" class="space-y-4"></div>
+
+    </main>
+
+  </div>
 
   <script type="module" src="js/match.js"></script>
 </body>

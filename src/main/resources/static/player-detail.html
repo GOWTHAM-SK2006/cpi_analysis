@@ -2,58 +2,73 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Player Detail — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Outfit', 'sans-serif'] },
           colors: {
-            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              bg: '#060606',
+              card: 'rgba(20, 20, 20, 0.6)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              muted: '#8E8E93'
+            }
           }
         }
       }
     }
   </script>
-  <style>
-    body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }
-    .custom-table th { background: #141414; color: #7F7F7F; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.75rem 1rem; border-bottom: 1px solid #222; }
-    .custom-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #1a1a1a; font-size: 0.85rem; color: #d1d5db; }
-    .custom-table tr:last-child td { border-bottom: none; }
-    .custom-table tr:hover td { background: rgba(255,122,0,0.03); }
-  </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col pb-12">
-  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
 
-  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
-    <!-- Back -->
-    <a href="players.html"
-      class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-xs font-bold mb-6 transition-colors">
-      ← Back to Players
-    </a>
+  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
+    
+    <!-- Header Placeholder -->
+    <div id="navbar-placeholder"></div>
 
-    <!-- Player Header -->
-    <div id="player-header" class="mb-8"></div>
-
-    <!-- Player Content -->
-    <div id="player-content">
-      <div class="flex items-center justify-center py-24 text-brand-muted text-sm">
-        <span class="animate-pulse">Loading player data...</span>
+    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
+      
+      <!-- Back button and bio header -->
+      <div>
+        <a href="players.html"
+          class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-[10px] font-black uppercase tracking-wider mb-3 transition-colors">
+          ← Back to Players
+        </a>
+        <div id="player-header">
+          <!-- Bio details populated dynamically -->
+          <div class="skeleton h-4 w-40 rounded mb-1.5"></div>
+          <div class="skeleton h-2 w-2/3 rounded"></div>
+        </div>
       </div>
-    </div>
-  </main>
+
+      <!-- Detail scores and histories -->
+      <div id="player-content" class="space-y-6">
+        <div class="flex items-center justify-center py-20 text-brand-muted text-xs">
+          <span class="animate-pulse">Loading athlete data...</span>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
 
   <script type="module">
     import { requireAuth } from './js/auth.js';
     import { api } from './js/api.js';
     import { renderNavbar, formatScore, scoreColor } from './js/layout.js';
 
-    requireAuth();
+    // Enforce authentication
+    try {
+      requireAuth();
+    } catch(e) {}
+
     renderNavbar('players.html');
 
     const playerId = new URLSearchParams(window.location.search).get('id');
@@ -63,70 +78,78 @@
       const d = await api.reports.player(playerId);
       document.title = `${d.name} — CPI`;
 
-      // Render header
+      // Render header details
       document.getElementById('player-header').innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 class="text-3xl font-extrabold text-white tracking-tight">${d.name}</h1>
-            <p class="text-sm text-brand-muted mt-1 font-semibold">
-              ${d.role}
-              <span class="mx-2 text-brand-border">·</span>${d.teamName}
-              <span class="mx-2 text-brand-border">·</span>Age ${d.age}
-              <span class="mx-2 text-brand-border">·</span>${d.battingStyle}
-              <span class="mx-2 text-brand-border">·</span>${d.bowlingStyle}
-            </p>
-          </div>
-        </div>`;
+        <h1 class="text-xl font-black text-white">${d.name}</h1>
+        <p class="text-[10px] text-brand-muted mt-0.5 font-bold uppercase tracking-wider">
+          ${d.role} · ${d.teamName} · Age ${d.age}
+        </p>
+        <p class="text-[9px] text-brand-muted mt-0.5 font-bold uppercase tracking-wider">
+          🏏 ${d.battingStyle} · ⚾ ${d.bowlingStyle}
+        </p>`;
 
-      // Score boxes
+      // Score box template
       const scoreBox = (label, val, sub) => `
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 text-center transition-all hover:border-brand-orange/40 duration-300">
-          <div class="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">${label}</div>
-          <div class="text-4xl font-black" style="color:${scoreColor(val)}">${formatScore(val)}</div>
-          <div class="text-xs text-brand-muted mt-1">${sub}</div>
+        <div class="glass-card p-4 text-center border border-brand-border flex-1">
+          <div class="text-[9px] font-bold uppercase tracking-wider text-brand-muted mb-1">${label}</div>
+          <div class="text-2xl font-black" style="color:${scoreColor(val)}">${formatScore(val)}</div>
+          <div class="text-[8px] text-brand-muted mt-0.5">${sub}</div>
         </div>`;
 
-      // Table rows
+      // Table cell helpers
+      const tdClass = "px-3 py-2 text-xs border-b border-brand-border/40 text-gray-300";
+      const thClass = "px-3 py-1.5 text-[9px] font-black uppercase text-brand-muted bg-[#0d0d0d] border-b border-brand-border/60 text-left";
+
+      // Practice table rows
       const ppiRows = d.ppiHistory.length
         ? d.ppiHistory.map(s => `
             <tr>
-              <td class="font-semibold text-white">Session #${s.practiceSessionId}</td>
-              <td>${s.trainingIntensity}</td><td>${s.skillExecution}</td>
-              <td>${s.focus}</td><td>${s.coachability}</td><td>${s.adaptability}</td>
-              <td class="font-extrabold" style="color:${scoreColor(s.ppi)}">${s.ppi.toFixed(1)}</td>
+              <td class="${tdClass} font-bold text-white">S#${s.practiceSessionId}</td>
+              <td class="${tdClass}">${s.trainingIntensity}</td>
+              <td class="${tdClass}">${s.focus}</td>
+              <td class="${tdClass}">${s.coachability}</td>
+              <td class="${tdClass} font-black" style="color:${scoreColor(s.ppi)}">${s.ppi.toFixed(1)}</td>
             </tr>`).join('')
-        : `<tr><td colspan="7" class="text-center py-8 text-brand-muted">No practice scores yet</td></tr>`;
+        : `<tr><td colspan="5" class="${tdClass} text-center py-6 text-brand-muted">No practice scores logged</td></tr>`;
 
+      // Match table rows
       const mpiRows = d.mpiHistory.length
         ? d.mpiHistory.map(s => `
             <tr>
-              <td class="font-semibold text-white">Match #${s.matchSessionId}</td>
-              <td>${s.technicalExecution}</td><td>${s.decisionMaking}</td>
-              <td>${s.matchAwareness}</td><td>${s.mentalResilience}</td><td>${s.competitiveImpact}</td>
-              <td class="font-extrabold" style="color:${scoreColor(s.mpi)}">${s.mpi.toFixed(1)}</td>
+              <td class="${tdClass} font-bold text-white">M#${s.matchSessionId}</td>
+              <td class="${tdClass}">${s.technicalExecution}</td>
+              <td class="${tdClass}">${s.mentalResilience}</td>
+              <td class="${tdClass}">${s.competitiveImpact}</td>
+              <td class="${tdClass} font-black" style="color:${scoreColor(s.mpi)}">${s.mpi.toFixed(1)}</td>
             </tr>`).join('')
-        : `<tr><td colspan="7" class="text-center py-8 text-brand-muted">No match scores yet</td></tr>`;
+        : `<tr><td colspan="5" class="${tdClass} text-center py-6 text-brand-muted">No match scores logged</td></tr>`;
 
       document.getElementById('player-content').innerHTML = `
-        <!-- KPI Scores -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-          ${scoreBox('CPI', d.cpi, 'Combined Index')}
-          ${scoreBox('PPI', d.averagePpi, 'Practice avg')}
-          ${scoreBox('MPI', d.averageMpi, 'Match avg')}
+        <!-- KPI score widgets -->
+        <div class="flex gap-2">
+          ${scoreBox('CPI', d.cpi, 'Combined')}
+          ${scoreBox('PPI', d.averagePpi, 'Practice Avg')}
+          ${scoreBox('MPI', d.averageMpi, 'Match Avg')}
         </div>
 
-        <!-- PPI History -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl mb-6 overflow-hidden">
-          <div class="px-6 py-5 border-b border-brand-border">
-            <h2 class="text-base font-bold text-white">Practice Performance History <span class="text-brand-orange ml-1">(PPI)</span></h2>
-            <p class="text-xs text-brand-muted mt-0.5">${d.ppiHistory.length} session${d.ppiHistory.length !== 1 ? 's' : ''} logged</p>
+        <!-- Practice (PPI) history -->
+        <div class="glass-card border border-brand-border overflow-hidden">
+          <div class="px-4 py-3 border-b border-brand-border flex justify-between items-center">
+            <div>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Practice Logs (PPI)</h3>
+              <p class="text-[9px] text-brand-muted mt-0.5">${d.ppiHistory.length} logs recorded</p>
+            </div>
+            <span class="text-[9px] bg-brand-orange/10 border border-brand-orange/20 text-brand-orange px-2 py-0.5 rounded font-bold">PPI</span>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full custom-table">
+            <table class="w-full text-left">
               <thead>
                 <tr>
-                  <th>Session</th><th>Intensity</th><th>Skill</th>
-                  <th>Focus</th><th>Coachability</th><th>Adaptability</th><th>PPI</th>
+                  <th class="${thClass}">Log</th>
+                  <th class="${thClass}">Intensity</th>
+                  <th class="${thClass}">Focus</th>
+                  <th class="${thClass}">Coach</th>
+                  <th class="${thClass}">Score</th>
                 </tr>
               </thead>
               <tbody>${ppiRows}</tbody>
@@ -134,18 +157,24 @@
           </div>
         </div>
 
-        <!-- MPI History -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden">
-          <div class="px-6 py-5 border-b border-brand-border">
-            <h2 class="text-base font-bold text-white">Match Performance History <span class="text-brand-orange ml-1">(MPI)</span></h2>
-            <p class="text-xs text-brand-muted mt-0.5">${d.mpiHistory.length} match${d.mpiHistory.length !== 1 ? 'es' : ''} scored</p>
+        <!-- Match (MPI) history -->
+        <div class="glass-card border border-brand-border overflow-hidden">
+          <div class="px-4 py-3 border-b border-brand-border flex justify-between items-center">
+            <div>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Match Logs (MPI)</h3>
+              <p class="text-[9px] text-brand-muted mt-0.5">${d.mpiHistory.length} logs recorded</p>
+            </div>
+            <span class="text-[9px] bg-gray-400/10 border border-gray-400/20 text-gray-300 px-2 py-0.5 rounded font-bold">MPI</span>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full custom-table">
+            <table class="w-full text-left">
               <thead>
                 <tr>
-                  <th>Match</th><th>Technical</th><th>Decision</th>
-                  <th>Awareness</th><th>Resilience</th><th>Impact</th><th>MPI</th>
+                  <th class="${thClass}">Log</th>
+                  <th class="${thClass}">Tech</th>
+                  <th class="${thClass}">Resil</th>
+                  <th class="${thClass}">Impact</th>
+                  <th class="${thClass}">Score</th>
                 </tr>
               </thead>
               <tbody>${mpiRows}</tbody>
@@ -156,10 +185,10 @@
 
     load().catch(err => {
       document.getElementById('player-content').innerHTML = `
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-12 text-center">
-          <div class="text-5xl mb-4">⚠️</div>
-          <h3 class="text-lg font-bold text-white">Failed to load player</h3>
-          <p class="text-brand-muted text-sm mt-1">${err.message}</p>
+        <div class="glass-card p-8 text-center border border-brand-border">
+          <div class="text-4xl mb-3">⚠️</div>
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Loading Error</h3>
+          <p class="text-[10px] text-brand-muted mt-2">${err.message}</p>
         </div>`;
     });
   </script>
