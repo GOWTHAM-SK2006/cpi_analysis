@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Detail — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <main class="container">
+    <div class="page-header">
+      <a href="players.html" style="color:var(--orange);font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:0.35rem;margin-bottom:0.75rem;">← Back to Players</a>
+      <div id="player-header"></div>
+    </div>
+    <div class="page-content" id="player-content">
+      <div style="text-align:center;padding:3rem;color:var(--text-secondary);">Loading...</div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { requireAuth } from './js/auth.js';
+    import { api } from './js/api.js';
+    import { renderNavbar, formatScore, scoreColor } from './js/layout.js';
+
+    requireAuth();
+    renderNavbar('players.html');
+
+    const playerId = new URLSearchParams(window.location.search).get('id');
+    if (!playerId) { window.location.href = 'players.html'; }
+
+    async function load() {
+      const d = await api.reports.player(playerId);
+      document.title = `${d.name} — CPI`;
+
+      document.getElementById('player-header').innerHTML = `
+        <h1>${d.name}</h1>
+        <p>${d.role} · ${d.teamName} · Age ${d.age} · ${d.battingStyle} · ${d.bowlingStyle}</p>`;
+
+      const scoreBox = (label, val, sub) => `
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-label">${label}</div>
+          <div class="stat-value" style="color:${scoreColor(val)};font-size:2rem;">${formatScore(val)}</div>
+          <div class="stat-sub">${sub}</div>
+        </div>`;
+
+      const ppiRows = d.ppiHistory.length
+        ? d.ppiHistory.map(s => `
+            <tr>
+              <td>Session #${s.practiceSessionId}</td>
+              <td>${s.trainingIntensity}</td><td>${s.skillExecution}</td>
+              <td>${s.focus}</td><td>${s.coachability}</td><td>${s.adaptability}</td>
+              <td style="color:${scoreColor(s.ppi)};font-weight:700;">${s.ppi.toFixed(1)}</td>
+            </tr>`).join('')
+        : `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">No practice scores yet</td></tr>`;
+
+      const mpiRows = d.mpiHistory.length
+        ? d.mpiHistory.map(s => `
+            <tr>
+              <td>Match #${s.matchSessionId}</td>
+              <td>${s.technicalExecution}</td><td>${s.decisionMaking}</td>
+              <td>${s.matchAwareness}</td><td>${s.mentalResilience}</td><td>${s.competitiveImpact}</td>
+              <td style="color:${scoreColor(s.mpi)};font-weight:700;">${s.mpi.toFixed(1)}</td>
+            </tr>`).join('')
+        : `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">No match scores yet</td></tr>`;
+
+      document.getElementById('player-content').innerHTML = `
+        <div class="stats-grid" style="margin-bottom:2rem;">
+          ${scoreBox('CPI', d.cpi, 'Combined Index')}
+          ${scoreBox('PPI', d.averagePpi, 'Practice avg')}
+          ${scoreBox('MPI', d.averageMpi, 'Match avg')}
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;">Practice Performance History (PPI)</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Session</th><th>Intensity</th><th>Skill</th>
+                <th>Focus</th><th>Coachability</th><th>Adaptability</th><th>PPI</th>
+              </tr></thead>
+              <tbody>${ppiRows}</tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;">Match Performance History (MPI)</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Match</th><th>Technical</th><th>Decision</th>
+                <th>Awareness</th><th>Resilience</th><th>Impact</th><th>MPI</th>
+              </tr></thead>
+              <tbody>${mpiRows}</tbody>
+            </table>
+          </div>
+        </div>`;
+    }
+
+    load().catch(err => {
+      document.getElementById('player-content').innerHTML =
+        `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Failed to load player</h3><p>${err.message}</p></div>`;
+    });
+  </script>
+</body>
+</html>

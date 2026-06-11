@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Sessions — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <main class="container">
+    <div class="page-header flex items-center justify-between">
+      <div><h1>Match Sessions</h1><p>Log matches and score player performance</p></div>
+      <button id="add-session-btn" class="btn btn-primary">+ New Match</button>
+    </div>
+    <div class="page-content">
+      <div id="sessions-list" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+      <div id="sessions-empty" class="empty-state hidden">
+        <div class="empty-icon">🏏</div>
+        <h3>No match sessions yet</h3>
+        <p>Log your first match and start scoring MPI for your players.</p>
+        <button class="btn btn-primary" onclick="document.getElementById('add-session-btn').click()">+ New Match</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Session Modal -->
+  <div id="session-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">New Match Session</h2>
+        <button class="modal-close">✕</button>
+      </div>
+      <form id="session-form">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="form-group">
+            <label class="form-label">Team *</label>
+            <select id="session-team" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Opponent *</label>
+            <input id="session-opponent" type="text" class="form-control" placeholder="e.g. City Cricket Club" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date *</label>
+            <input id="session-date" type="date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea id="session-notes" class="form-control" placeholder="Optional match notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Match</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/match.js"></script>
+</body>
+</html>

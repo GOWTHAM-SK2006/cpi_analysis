@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-text">CPI<span>.</span></div>
+        <p>Cullinan Performance Index</p>
+      </div>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-subtitle">Sign in to your coaching dashboard</p>
+
+      <div id="error-msg" class="hidden" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#ef4444;margin-bottom:1rem;"></div>
+
+      <form id="login-form">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input id="email" type="email" class="form-control" placeholder="coach@academy.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" type="password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" id="submit-btn" class="btn btn-primary w-full btn-lg" style="margin-top:0.5rem;">
+            Sign In
+          </button>
+        </div>
+      </form>
+
+      <div style="text-align:center;margin-top:1rem;">
+        <a href="#" style="font-size:0.82rem;color:var(--text-muted);">Forgot password? (Coming soon)</a>
+      </div>
+      <div class="auth-footer">
+        Don't have an account? <a href="signup.html">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { api } from './js/api.js';
+    import { saveSession, redirectIfLoggedIn } from './js/auth.js';
+    redirectIfLoggedIn();
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errEl = document.getElementById('error-msg');
+      btn.textContent = 'Signing in...'; btn.disabled = true;
+      errEl.classList.add('hidden');
+      try {
+        const data = await api.auth.login({
+          email:    document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+        });
+        saveSession(data);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errEl.textContent = err.message || 'Invalid email or password';
+        errEl.classList.remove('hidden');
+        btn.textContent = 'Sign In'; btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

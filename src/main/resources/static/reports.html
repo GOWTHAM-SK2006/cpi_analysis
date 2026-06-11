@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Reports</h1>
+      <p>Generate player and team performance reports</p>
+    </div>
+    <div class="page-content">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+        <!-- Player Report -->
+        <div class="card">
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Player Report</h2>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label">Select Player</label>
+            <select id="report-player" class="form-control"></select>
+          </div>
+          <button id="gen-player-btn" class="btn btn-primary w-full">Generate Player Report</button>
+        </div>
+        <!-- Team Report -->
+        <div class="card">
+          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Team Report</h2>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label">Select Team</label>
+            <select id="report-team" class="form-control"></select>
+          </div>
+          <button id="gen-team-btn" class="btn btn-primary w-full">Generate Team Report</button>
+        </div>
+      </div>
+
+      <div id="report-output"></div>
+
+      <div id="reports-empty" class="empty-state" style="display:none;">
+        <div class="empty-icon">📊</div>
+        <h3>Select a player or team above</h3>
+        <p>Reports will appear here once generated.</p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-text">CPI<span>.</span></div>
+        <p>Cullinan Performance Index</p>
+      </div>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-subtitle">Start tracking performance for your academy</p>
+      <div id="error-msg" class="hidden" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#ef4444;margin-bottom:1rem;"></div>
+      <form id="signup-form">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <input id="name" type="text" class="form-control" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="academy">Academy Name</label>
+            <input id="academy" type="text" class="form-control" placeholder="Your cricket academy" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input id="email" type="email" class="form-control" placeholder="coach@academy.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" type="password" class="form-control" placeholder="Min 6 characters" required minlength="6">
+          </div>
+          <button type="submit" id="submit-btn" class="btn btn-primary w-full btn-lg">Create Account</button>
+        </div>
+      </form>
+      <div class="auth-footer">Already have an account? <a href="login.html">Sign in</a></div>
+    </div>
+  </div>
+  <script type="module">
+    import { api } from './js/api.js';
+    import { saveSession, redirectIfLoggedIn } from './js/auth.js';
+    redirectIfLoggedIn();
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errEl = document.getElementById('error-msg');
+      btn.textContent = 'Creating...'; btn.disabled = true; errEl.classList.add('hidden');
+      try {
+        const data = await api.auth.signup({
+          name: document.getElementById('name').value.trim(),
+          academyName: document.getElementById('academy').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+        });
+        saveSession(data); window.location.href = 'dashboard.html';
+      } catch (err) {
+        errEl.textContent = err.message || 'Signup failed';
+        errEl.classList.remove('hidden'); btn.textContent = 'Create Account'; btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

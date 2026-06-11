@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <main class="container">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Your academy performance overview</p>
+    </div>
+    <div class="page-content">
+
+      <!-- Stats -->
+      <div class="stats-grid" style="margin-bottom:2rem;">
+        <div class="stat-card">
+          <div class="stat-icon">🛡</div>
+          <div class="stat-label">Total Teams</div>
+          <div class="stat-value" id="total-teams">—</div>
+          <div class="stat-sub">Active squads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👤</div>
+          <div class="stat-label">Total Players</div>
+          <div class="stat-value" id="total-players">—</div>
+          <div class="stat-sub">Registered athletes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-label">Average CPI</div>
+          <div class="stat-value" id="avg-cpi">—</div>
+          <div class="stat-sub">Combined index</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card" style="margin-bottom:2rem;">
+        <h2 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem;">Quick Actions</h2>
+        <div class="flex gap-2" style="flex-wrap:wrap;">
+          <a href="teams.html"             class="btn btn-primary">+ New Team</a>
+          <a href="players.html"           class="btn btn-secondary">+ Add Player</a>
+          <a href="practice-sessions.html" class="btn btn-secondary">+ Practice Session</a>
+          <a href="match-sessions.html"    class="btn btn-secondary">+ Match Session</a>
+          <a href="reports.html"           class="btn btn-secondary">View Reports</a>
+        </div>
+      </div>
+
+      <!-- Guide -->
+      <div class="card card-orange">
+        <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Getting Started</h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
+            <span style="width:24px;height:24px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</span>
+            <span style="color:var(--text-secondary);">Create your first <a href="teams.html" style="color:var(--orange);">Team</a></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
+            <span style="width:24px;height:24px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</span>
+            <span style="color:var(--text-secondary);">Add <a href="players.html" style="color:var(--orange);">Players</a> to the team</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
+            <span style="width:24px;height:24px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</span>
+            <span style="color:var(--text-secondary);">Log <a href="practice-sessions.html" style="color:var(--orange);">Practice</a> or <a href="match-sessions.html" style="color:var(--orange);">Match</a> sessions</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.875rem;">
+            <span style="width:24px;height:24px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">4</span>
+            <span style="color:var(--text-secondary);">Score players, then view <a href="reports.html" style="color:var(--orange);">Reports</a></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Players — CPI Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <main class="container">
+    <div class="page-header flex items-center justify-between">
+      <div><h1>Players</h1><p>Manage your registered athletes</p></div>
+      <button id="add-player-btn" class="btn btn-primary">+ Add Player</button>
+    </div>
+    <div class="page-content">
+      <div class="search-bar" style="margin-bottom:1.25rem;">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" class="form-control" placeholder="Search by name or team...">
+      </div>
+      <div id="players-list"></div>
+      <div id="players-empty" class="empty-state hidden">
+        <div class="empty-icon">👤</div>
+        <h3>No players yet</h3>
+        <p>Add players to your teams to start tracking their performance.</p>
+        <button class="btn btn-primary" onclick="document.getElementById('add-player-btn').click()">+ Add Player</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Player Modal -->
+  <div id="player-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Add Player</h2>
+        <button class="modal-close">✕</button>
+      </div>
+      <form id="player-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input id="player-name" type="text" class="form-control" placeholder="Player name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age *</label>
+            <input id="player-age" type="number" class="form-control" placeholder="e.g. 17" min="5" max="60" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role *</label>
+            <select id="player-role" class="form-control" required>
+              <option value="">Select role</option>
+              <option>Batsman</option>
+              <option>Bowler</option>
+              <option>All-Rounder</option>
+              <option>Wicketkeeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Team *</label>
+            <select id="player-team" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Batting Style *</label>
+            <select id="player-batting" class="form-control" required>
+              <option value="">Select style</option>
+              <option>Right-hand bat</option>
+              <option>Left-hand bat</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bowling Style *</label>
+            <select id="player-bowling" class="form-control" required>
+              <option value="">Select style</option>
+              <option>Right-arm fast</option>
+              <option>Right-arm medium</option>
+              <option>Right-arm off-break</option>
+              <option>Left-arm fast</option>
+              <option>Left-arm orthodox</option>
+              <option>None</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Player</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="js/players.js"></script>
+</body>
+</html>

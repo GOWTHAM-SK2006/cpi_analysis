@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPI — Cullinan Performance Index</title>
+  <meta name="description" content="Elite cricket performance analytics platform. Track PPI, MPI, and CPI for your academy.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .landing-nav { display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0; }
+    .landing-brand { font-size:1.4rem;font-weight:900;letter-spacing:-0.02em; }
+    .landing-brand span { color:var(--orange); }
+    .gradient-text { background:linear-gradient(135deg,#fff 0%,#FF7A00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+    .hero-badge { display:inline-flex;align-items:center;gap:0.5rem;background:var(--orange-glow);border:1px solid rgba(255,122,0,0.3);border-radius:20px;padding:0.35rem 0.9rem;font-size:0.8rem;color:var(--orange);font-weight:600;margin-bottom:1.5rem; }
+    .how-step { display:flex;align-items:flex-start;gap:1.25rem;padding:1.25rem 0; }
+    .step-num { width:36px;height:36px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;flex-shrink:0; }
+    .step-content h4 { font-weight:700;margin-bottom:0.25rem; }
+    .step-content p  { color:var(--text-secondary);font-size:0.85rem; }
+    .pricing-card { text-align:center; }
+    .pricing-card .price { font-size:3rem;font-weight:900;color:var(--orange); }
+    .pricing-card .price sup { font-size:1.5rem;vertical-align:super; }
+    .pricing-card ul { list-style:none;text-align:left;margin:1.5rem 0; }
+    .pricing-card ul li { padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.875rem;color:var(--text-secondary); }
+    .pricing-card ul li::before { content:'✓ ';color:var(--orange);font-weight:700; }
+    section { padding:5rem 0; }
+    .section-divider { border:none;border-top:1px solid var(--border);margin:0; }
+    footer { border-top:1px solid var(--border);padding:2rem 0;text-align:center;color:var(--text-muted);font-size:0.8rem; }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav style="border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(11,11,11,0.95);backdrop-filter:blur(12px);">
+    <div class="container landing-nav">
+      <div class="landing-brand">CPI<span>.</span></div>
+      <div class="flex gap-2">
+        <a href="login.html"  class="btn btn-secondary btn-sm">Login</a>
+        <a href="signup.html" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="padding:7rem 0 5rem;">
+    <div class="container">
+      <div class="hero-badge">🏏 Cricket Performance Analytics</div>
+      <h1>Track. Analyse.<br><span class="gradient-text">Elevate Performance.</span></h1>
+      <p>The Cullinan Performance Index gives coaches a scientific framework to measure every player's practice and match performance with precision.</p>
+      <div class="hero-buttons">
+        <a href="signup.html" class="btn btn-primary btn-lg">Start Free →</a>
+        <a href="#how"        class="btn btn-secondary btn-lg">How It Works</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="section-title">Everything Your Academy Needs</h2>
+      <p class="section-sub">A complete performance management system built for serious coaches.</p>
+      <div class="cards-grid">
+        <div class="card feature-card"><div class="feature-icon">🎯</div><h3>Practice Performance Index</h3><p>Score players across 5 pillars after every practice session to track growth objectively.</p></div>
+        <div class="card feature-card"><div class="feature-icon">🏏</div><h3>Match Performance Index</h3><p>Evaluate tactical and mental performance during match play with a structured MPI framework.</p></div>
+        <div class="card feature-card"><div class="feature-icon">📊</div><h3>CPI — Combined Score</h3><p>The Cullinan Performance Index combines PPI and MPI into one elite overall score per player.</p></div>
+        <div class="card feature-card"><div class="feature-icon">🛡</div><h3>Team Management</h3><p>Organise players into multiple teams, track rosters, and view team-level performance reports.</p></div>
+        <div class="card feature-card"><div class="feature-icon">📈</div><h3>Performance History</h3><p>View full session-by-session history for every player. Identify trends and improvement areas.</p></div>
+        <div class="card feature-card"><div class="feature-icon">🔒</div><h3>Secure & Private</h3><p>All data belongs to your academy. JWT-secured, coach-scoped access on every endpoint.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+        <div>
+          <h2 style="font-size:2rem;font-weight:800;margin-bottom:0.5rem;">How CPI Works</h2>
+          <p style="color:var(--text-secondary);margin-bottom:2rem;">Four simple steps from signup to elite performance insights.</p>
+          <div class="how-step"><div class="step-num">1</div><div class="step-content"><h4>Create Your Academy</h4><p>Sign up, create your teams and add all your players in minutes.</p></div></div>
+          <div class="how-step"><div class="step-num">2</div><div class="step-content"><h4>Log Sessions</h4><p>Create practice and match sessions for your teams after each event.</p></div></div>
+          <div class="how-step"><div class="step-num">3</div><div class="step-content"><h4>Score Players</h4><p>Use the slider system to rate each player across all 5 performance pillars.</p></div></div>
+          <div class="how-step"><div class="step-num">4</div><div class="step-content"><h4>View Reports</h4><p>Instantly see each player's CPI, PPI, MPI and full performance history.</p></div></div>
+        </div>
+        <div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;">Performance Pillars</h3>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:1.25rem;"><strong style="color:var(--orange);">PPI</strong> — Practice Performance Index</p>
+          <div class="pillar-bar"><span>Training Intensity</span><div class="progress"><div class="progress-bar" style="width:85%"></div></div><span>8.5</span></div>
+          <div class="pillar-bar"><span>Skill Execution</span><div class="progress"><div class="progress-bar" style="width:72%"></div></div><span>7.2</span></div>
+          <div class="pillar-bar"><span>Focus</span><div class="progress"><div class="progress-bar" style="width:90%"></div></div><span>9.0</span></div>
+          <div class="pillar-bar"><span>Coachability</span><div class="progress"><div class="progress-bar" style="width:78%"></div></div><span>7.8</span></div>
+          <div class="pillar-bar"><span>Adaptability</span><div class="progress"><div class="progress-bar" style="width:65%"></div></div><span>6.5</span></div>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin:1.5rem 0 1.25rem;"><strong style="color:var(--orange);">MPI</strong> — Match Performance Index</p>
+          <div class="pillar-bar"><span>Technical Execution</span><div class="progress"><div class="progress-bar" style="width:80%"></div></div><span>8.0</span></div>
+          <div class="pillar-bar"><span>Decision Making</span><div class="progress"><div class="progress-bar" style="width:70%"></div></div><span>7.0</span></div>
+          <div class="pillar-bar"><span>Match Awareness</span><div class="progress"><div class="progress-bar" style="width:75%"></div></div><span>7.5</span></div>
+          <div class="pillar-bar"><span>Mental Resilience</span><div class="progress"><div class="progress-bar" style="width:88%"></div></div><span>8.8</span></div>
+          <div class="pillar-bar"><span>Competitive Impact</span><div class="progress"><div class="progress-bar" style="width:60%"></div></div><span>6.0</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- PRICING -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Simple Pricing</h2>
+      <p class="section-sub">One plan. Every feature. No limits.</p>
+      <div style="max-width:380px;margin:0 auto;">
+        <div class="card card-orange pricing-card">
+          <div style="font-size:0.8rem;color:var(--orange);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-bottom:0.5rem;">Academy Plan</div>
+          <div class="price"><sup>₹</sup>Coming Soon</div>
+          <div style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:1rem;">Currently in beta — free for early adopters</div>
+          <ul>
+            <li>Unlimited Teams</li>
+            <li>Unlimited Players</li>
+            <li>PPI + MPI + CPI Scoring</li>
+            <li>Full Performance History</li>
+            <li>Player & Team Reports</li>
+            <li>Secure JWT Authentication</li>
+          </ul>
+          <a href="signup.html" class="btn btn-primary w-full">Get Started Free</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="landing-brand" style="font-size:1.1rem;margin-bottom:0.5rem;">CPI<span style="color:var(--orange);">.</span></div>
+      <p>Cullinan Performance Index · Built for elite cricket academies</p>
+    </div>
+  </footer>
+</body>
+</html>
