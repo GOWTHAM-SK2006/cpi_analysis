@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/teams")
 public class TeamController {
 
-    @Autowired
-    private TeamService teamService;
+    private final TeamService teamService;
+
+    public TeamController(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
     @GetMapping
     public ResponseEntity<List<TeamResponse>> getAllTeams(@AuthenticationPrincipal UserDetails user) {

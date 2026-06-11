@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/mpi")
 public class MPIScoreController {
 
-    @Autowired
-    private MPIScoreService mpiScoreService;
+    private final MPIScoreService mpiScoreService;
+
+    public MPIScoreController(MPIScoreService mpiScoreService) {
+        this.mpiScoreService = mpiScoreService;
+    }
 
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<List<MPIScoreResponse>> getBySession(@PathVariable Long sessionId,

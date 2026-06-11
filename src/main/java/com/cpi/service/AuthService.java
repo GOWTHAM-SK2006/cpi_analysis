@@ -11,14 +11,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
-    private CoachRepository coachRepository;
+    private final CoachRepository coachRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtils jwtUtils;
+    public AuthService(CoachRepository coachRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtUtils jwtUtils) {
+        this.coachRepository = coachRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     public AuthResponse signup(SignupRequest request) {
         if (coachRepository.existsByEmail(request.getEmail())) {

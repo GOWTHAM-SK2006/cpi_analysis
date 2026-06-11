@@ -12,14 +12,17 @@ import java.util.stream.Collectors;
 @Service
 public class MatchSessionService {
 
-    @Autowired
-    private MatchSessionRepository matchSessionRepository;
+    private final MatchSessionRepository matchSessionRepository;
+    private final TeamRepository teamRepository;
+    private final CoachRepository coachRepository;
 
-    @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
-    private CoachRepository coachRepository;
+    public MatchSessionService(MatchSessionRepository matchSessionRepository,
+                               TeamRepository teamRepository,
+                               CoachRepository coachRepository) {
+        this.matchSessionRepository = matchSessionRepository;
+        this.teamRepository = teamRepository;
+        this.coachRepository = coachRepository;
+    }
 
     private Coach getCoach(String email) {
         return coachRepository.findByEmail(email)

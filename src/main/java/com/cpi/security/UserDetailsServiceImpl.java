@@ -2,7 +2,7 @@ package com.cpi.security;
 
 import com.cpi.entity.Coach;
 import com.cpi.repository.CoachRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,11 @@ import java.util.Collections;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private CoachRepository coachRepository;
+    private final CoachRepository coachRepository;
+
+    public UserDetailsServiceImpl(CoachRepository coachRepository) {
+        this.coachRepository = coachRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

@@ -11,10 +11,20 @@ import java.util.stream.Collectors;
 @Service
 public class ReportService {
 
-    @Autowired private PlayerRepository playerRepository;
-    @Autowired private PPIScoreRepository ppiScoreRepository;
-    @Autowired private MPIScoreRepository mpiScoreRepository;
-    @Autowired private CoachRepository coachRepository;
+    private final PlayerRepository playerRepository;
+    private final PPIScoreRepository ppiScoreRepository;
+    private final MPIScoreRepository mpiScoreRepository;
+    private final CoachRepository coachRepository;
+
+    public ReportService(PlayerRepository playerRepository,
+                         PPIScoreRepository ppiScoreRepository,
+                         MPIScoreRepository mpiScoreRepository,
+                         CoachRepository coachRepository) {
+        this.playerRepository = playerRepository;
+        this.ppiScoreRepository = ppiScoreRepository;
+        this.mpiScoreRepository = mpiScoreRepository;
+        this.coachRepository = coachRepository;
+    }
 
     private Coach getCoach(String email) {
         return coachRepository.findByEmail(email)

@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/practice-sessions")
 public class PracticeSessionController {
 
-    @Autowired
-    private PracticeSessionService practiceSessionService;
+    private final PracticeSessionService practiceSessionService;
+
+    public PracticeSessionController(PracticeSessionService practiceSessionService) {
+        this.practiceSessionService = practiceSessionService;
+    }
 
     @GetMapping
     public ResponseEntity<List<PracticeSessionResponse>> getAll(@AuthenticationPrincipal UserDetails user) {

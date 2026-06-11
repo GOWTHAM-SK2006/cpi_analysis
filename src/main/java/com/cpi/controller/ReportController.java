@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/reports")
 public class ReportController {
 
-    @Autowired
-    private ReportService reportService;
+    private final ReportService reportService;
+
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
     @GetMapping("/player/{playerId}")
     public ResponseEntity<?> getPlayerReport(@PathVariable Long playerId,

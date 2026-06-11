@@ -12,17 +12,20 @@ import java.util.stream.Collectors;
 @Service
 public class PPIScoreService {
 
-    @Autowired
-    private PPIScoreRepository ppiScoreRepository;
+    private final PPIScoreRepository ppiScoreRepository;
+    private final PracticeSessionRepository practiceSessionRepository;
+    private final PlayerRepository playerRepository;
+    private final CoachRepository coachRepository;
 
-    @Autowired
-    private PracticeSessionRepository practiceSessionRepository;
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
-    private CoachRepository coachRepository;
+    public PPIScoreService(PPIScoreRepository ppiScoreRepository,
+                           PracticeSessionRepository practiceSessionRepository,
+                           PlayerRepository playerRepository,
+                           CoachRepository coachRepository) {
+        this.ppiScoreRepository = ppiScoreRepository;
+        this.practiceSessionRepository = practiceSessionRepository;
+        this.playerRepository = playerRepository;
+        this.coachRepository = coachRepository;
+    }
 
     private Coach getCoach(String email) {
         return coachRepository.findByEmail(email)

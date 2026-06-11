@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/players")
 public class PlayerController {
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerService playerService;
+
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     @GetMapping
     public ResponseEntity<List<PlayerResponse>> getAllPlayers(

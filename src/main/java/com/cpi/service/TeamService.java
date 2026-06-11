@@ -12,11 +12,13 @@ import java.util.stream.Collectors;
 @Service
 public class TeamService {
 
-    @Autowired
-    private TeamRepository teamRepository;
+    private final TeamRepository teamRepository;
+    private final CoachRepository coachRepository;
 
-    @Autowired
-    private CoachRepository coachRepository;
+    public TeamService(TeamRepository teamRepository, CoachRepository coachRepository) {
+        this.teamRepository = teamRepository;
+        this.coachRepository = coachRepository;
+    }
 
     private Coach getCoach(String email) {
         return coachRepository.findByEmail(email)

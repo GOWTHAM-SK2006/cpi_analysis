@@ -13,11 +13,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/dashboard")
 public class DashboardController {
 
-    @Autowired private CoachRepository coachRepository;
-    @Autowired private TeamRepository teamRepository;
-    @Autowired private PlayerRepository playerRepository;
-    @Autowired private PPIScoreRepository ppiScoreRepository;
-    @Autowired private MPIScoreRepository mpiScoreRepository;
+    private final CoachRepository coachRepository;
+    private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
+    private final PPIScoreRepository ppiScoreRepository;
+    private final MPIScoreRepository mpiScoreRepository;
+
+    public DashboardController(CoachRepository coachRepository,
+                               TeamRepository teamRepository,
+                               PlayerRepository playerRepository,
+                               PPIScoreRepository ppiScoreRepository,
+                               MPIScoreRepository mpiScoreRepository) {
+        this.coachRepository = coachRepository;
+        this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
+        this.ppiScoreRepository = ppiScoreRepository;
+        this.mpiScoreRepository = mpiScoreRepository;
+    }
 
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard(@AuthenticationPrincipal UserDetails user) {

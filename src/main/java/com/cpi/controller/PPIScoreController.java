@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/ppi")
 public class PPIScoreController {
 
-    @Autowired
-    private PPIScoreService ppiScoreService;
+    private final PPIScoreService ppiScoreService;
+
+    public PPIScoreController(PPIScoreService ppiScoreService) {
+        this.ppiScoreService = ppiScoreService;
+    }
 
     @GetMapping("/session/{sessionId}")
     public ResponseEntity<List<PPIScoreResponse>> getBySession(@PathVariable Long sessionId,

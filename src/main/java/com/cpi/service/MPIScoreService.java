@@ -12,17 +12,20 @@ import java.util.stream.Collectors;
 @Service
 public class MPIScoreService {
 
-    @Autowired
-    private MPIScoreRepository mpiScoreRepository;
+    private final MPIScoreRepository mpiScoreRepository;
+    private final MatchSessionRepository matchSessionRepository;
+    private final PlayerRepository playerRepository;
+    private final CoachRepository coachRepository;
 
-    @Autowired
-    private MatchSessionRepository matchSessionRepository;
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
-    private CoachRepository coachRepository;
+    public MPIScoreService(MPIScoreRepository mpiScoreRepository,
+                           MatchSessionRepository matchSessionRepository,
+                           PlayerRepository playerRepository,
+                           CoachRepository coachRepository) {
+        this.mpiScoreRepository = mpiScoreRepository;
+        this.matchSessionRepository = matchSessionRepository;
+        this.playerRepository = playerRepository;
+        this.coachRepository = coachRepository;
+    }
 
     private Coach getCoach(String email) {
         return coachRepository.findByEmail(email)

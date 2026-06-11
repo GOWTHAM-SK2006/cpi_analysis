@@ -15,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/match-sessions")
 public class MatchSessionController {
 
-    @Autowired
-    private MatchSessionService matchSessionService;
+    private final MatchSessionService matchSessionService;
+
+    public MatchSessionController(MatchSessionService matchSessionService) {
+        this.matchSessionService = matchSessionService;
+    }
 
     @GetMapping
     public ResponseEntity<List<MatchSessionResponse>> getAll(@AuthenticationPrincipal UserDetails user) {
