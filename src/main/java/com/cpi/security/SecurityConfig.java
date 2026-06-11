@@ -28,6 +28,7 @@ public class SecurityConfig {
     // Public endpoints that don't need authentication
     private static final String[] PUBLIC_URLS = {
             "/api/auth/**",
+            "/health",
             "/",
             "/index.html",
             "/login.html",
