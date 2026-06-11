@@ -3,7 +3,7 @@
  */
 import { requireAuth } from './auth.js';
 import { api } from './api.js';
-import { renderNavbar, showToast, openModal, closeModal } from './layout.js';
+import { renderNavbar, showToast } from './layout.js';
 
 requireAuth();
 renderNavbar('teams.html');
@@ -19,6 +19,16 @@ const nameInput   = document.getElementById('team-name');
 const descInput   = document.getElementById('team-desc');
 const searchInput = document.getElementById('search-input');
 const form        = document.getElementById('team-form');
+
+function openModal() {
+  modalEl.classList.remove('hidden');
+  modalEl.classList.add('flex');
+  setTimeout(() => nameInput.focus(), 100);
+}
+function closeModal() {
+  modalEl.classList.add('hidden');
+  modalEl.classList.remove('flex');
+}
 
 async function loadTeams() {
   try {
@@ -37,14 +47,23 @@ function renderTeams(teams) {
   }
   emptyEl.classList.add('hidden');
   listEl.innerHTML = teams.map(t => `
-    <div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
-      <div>
-        <div style="font-weight:700;font-size:1rem;">${t.name}</div>
-        <div style="color:var(--text-secondary);font-size:0.82rem;margin-top:0.25rem;">${t.description || 'No description'}</div>
+    <div class="bg-brand-card border border-brand-border rounded-2xl px-5 py-4 flex items-center justify-between gap-4 hover:border-brand-orange/40 transition-all duration-200" style="box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+      <div class="flex items-center gap-4 min-w-0">
+        <div class="w-10 h-10 flex-shrink-0 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-lg">🛡️</div>
+        <div class="min-w-0">
+          <div class="font-bold text-white text-sm truncate">${t.name}</div>
+          <div class="text-brand-muted text-xs mt-0.5 truncate">${t.description || 'No description'}</div>
+        </div>
       </div>
-      <div class="flex gap-1">
-        <button class="btn btn-secondary btn-sm" onclick="editTeam(${t.id})">Edit</button>
-        <button class="btn btn-danger btn-sm"    onclick="deleteTeam(${t.id}, '${t.name}')">Delete</button>
+      <div class="flex gap-2 flex-shrink-0">
+        <button onclick="editTeam(${t.id})"
+          class="text-xs font-bold px-3 py-1.5 rounded-lg border border-brand-border text-gray-300 hover:border-brand-orange hover:text-brand-orange transition-all">
+          Edit
+        </button>
+        <button onclick="deleteTeam(${t.id}, '${t.name.replace(/'/g,"\\'")}'')"
+          class="text-xs font-bold px-3 py-1.5 rounded-lg border border-red-900/40 text-red-400 hover:bg-red-950/20 transition-all">
+          Delete
+        </button>
       </div>
     </div>`).join('');
 }
@@ -59,35 +78,39 @@ document.getElementById('add-team-btn').addEventListener('click', () => {
   modalTitle.textContent = 'New Team';
   nameInput.value = '';
   descInput.value = '';
-  openModal('team-modal');
+  openModal();
 });
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  const submitBtn = form.querySelector('[type="submit"]');
+  submitBtn.textContent = 'Saving...'; submitBtn.disabled = true;
   const body = { name: nameInput.value.trim(), description: descInput.value.trim() };
   try {
     if (editingId) {
       await api.teams.update(editingId, body);
-      showToast('Team updated');
+      showToast('Team updated ✓');
     } else {
       await api.teams.create(body);
-      showToast('Team created');
+      showToast('Team created ✓');
     }
-    closeModal('team-modal');
+    closeModal();
     loadTeams();
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    submitBtn.textContent = 'Save Team'; submitBtn.disabled = false;
   }
 });
 
-window.editTeam = async (id) => {
+window.editTeam = (id) => {
   const team = allTeams.find(t => t.id === id);
   if (!team) return;
   editingId = id;
   modalTitle.textContent = 'Edit Team';
   nameInput.value = team.name;
   descInput.value = team.description || '';
-  openModal('team-modal');
+  openModal();
 };
 
 window.deleteTeam = async (id, name) => {
@@ -102,7 +125,10 @@ window.deleteTeam = async (id, name) => {
 };
 
 document.querySelectorAll('.modal-close, .btn-cancel').forEach(btn =>
-  btn.addEventListener('click', () => closeModal('team-modal'))
+  btn.addEventListener('click', closeModal)
 );
+
+// Close on backdrop click
+modalEl.addEventListener('click', (e) => { if (e.target === modalEl) closeModal(); });
 
 loadTeams();

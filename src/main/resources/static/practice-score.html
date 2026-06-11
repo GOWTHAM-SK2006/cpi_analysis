@@ -1,23 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PPI Scoring — CPI Platform</title>
-  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Outfit', 'sans-serif'] },
+          colors: {
+            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }
+    input[type=range] { accent-color: #FF7A00; }
+  </style>
 </head>
-<body>
-  <div id="navbar-placeholder"></div>
+<body class="text-gray-100 min-h-screen flex flex-col pb-12">
+  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
 
-  <main class="container">
-    <div class="page-header">
-      <a href="practice-sessions.html" style="color:var(--orange);font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:0.35rem;margin-bottom:0.75rem;">← Back to Sessions</a>
-      <h1>PPI Scoring</h1>
-      <p>Rate each player across 5 practice performance pillars (1–10)</p>
+  <main class="container mx-auto px-4 mt-8 max-w-5xl flex-grow">
+    <!-- Back + Header -->
+    <div class="mb-8">
+      <a href="practice-sessions.html"
+        class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-xs font-bold mb-4 transition-colors">
+        ← Back to Sessions
+      </a>
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">PPI Scoring</h1>
+      <p class="text-brand-muted text-sm mt-1">Rate each player across 5 practice performance pillars (1–10)</p>
     </div>
-    <div class="page-content">
-      <div id="score-list"></div>
-    </div>
+
+    <!-- Score Cards List -->
+    <div id="score-list" class="flex flex-col gap-6"></div>
   </main>
 
   <script type="module" src="js/practice.js"></script>

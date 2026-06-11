@@ -1,54 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up — CPI Platform</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Create your CPI coaching account and start tracking player performance.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Outfit', 'sans-serif'] },
+          colors: {
+            brand: { orange: '#FF7A00', bg: '#0B0B0B', card: '#141414', border: '#222222', muted: '#7F7F7F' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0B0B0B; font-family: 'Outfit', sans-serif; }
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px #141414 inset;
+      -webkit-text-fill-color: #fff;
+      caret-color: #fff;
+    }
+  </style>
 </head>
-<body>
-  <div class="auth-wrapper">
-    <div class="auth-card">
-      <div class="auth-logo">
-        <div class="logo-text">CPI<span>.</span></div>
-        <p>Cullinan Performance Index</p>
-      </div>
-      <h1 class="auth-title">Create your account</h1>
-      <p class="auth-subtitle">Start tracking performance for your academy</p>
-      <div id="error-msg" class="hidden" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:#ef4444;margin-bottom:1rem;"></div>
-      <form id="signup-form">
-        <div style="display:flex;flex-direction:column;gap:1rem;">
-          <div class="form-group">
-            <label class="form-label" for="name">Full Name</label>
-            <input id="name" type="text" class="form-control" placeholder="Your full name" required>
+<body class="text-gray-100 min-h-screen flex items-center justify-center px-4 py-8">
+
+  <div class="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-brand-orange/5 blur-3xl pointer-events-none"></div>
+
+  <div class="w-full max-w-md relative z-10">
+    <div class="text-center mb-8">
+      <a href="index.html" class="inline-block text-4xl font-black tracking-tight text-white">
+        CPI<span class="text-brand-orange">.</span>
+      </a>
+      <p class="text-brand-muted text-sm mt-2 font-medium">Cullinan Performance Index</p>
+    </div>
+
+    <div class="bg-brand-card border border-brand-border rounded-2xl p-8 shadow-2xl">
+      <h1 class="text-2xl font-extrabold text-white mb-1">Create your account</h1>
+      <p class="text-brand-muted text-sm mb-7">Start tracking performance for your cricket academy</p>
+
+      <div id="error-msg" class="hidden mb-5 bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-xl px-4 py-3 font-semibold"></div>
+
+      <form id="signup-form" class="flex flex-col gap-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="name">Full Name</label>
+            <input id="name" type="text" placeholder="Your full name" required
+              class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
           </div>
-          <div class="form-group">
-            <label class="form-label" for="academy">Academy Name</label>
-            <input id="academy" type="text" class="form-control" placeholder="Your cricket academy" required>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="academy">Academy Name</label>
+            <input id="academy" type="text" placeholder="Your academy" required
+              class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
           </div>
-          <div class="form-group">
-            <label class="form-label" for="email">Email Address</label>
-            <input id="email" type="email" class="form-control" placeholder="coach@academy.com" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="password">Password</label>
-            <input id="password" type="password" class="form-control" placeholder="Min 6 characters" required minlength="6">
-          </div>
-          <button type="submit" id="submit-btn" class="btn btn-primary w-full btn-lg">Create Account</button>
         </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="email">Email Address</label>
+          <input id="email" type="email" placeholder="coach@academy.com" required
+            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2" for="password">Password</label>
+          <input id="password" type="password" placeholder="Min 6 characters" required minlength="6"
+            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+        </div>
+        <button type="submit" id="submit-btn"
+          class="w-full bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-orange-500/15 active:scale-[0.98] mt-2">
+          Create Account
+        </button>
       </form>
-      <div class="auth-footer">Already have an account? <a href="login.html">Sign in</a></div>
+
+      <p class="text-center text-xs text-brand-muted mt-6">
+        Already have an account?
+        <a href="login.html" class="text-brand-orange font-semibold hover:underline ml-1">Sign in →</a>
+      </p>
     </div>
   </div>
+
   <script type="module">
     import { api } from './js/api.js';
     import { saveSession, redirectIfLoggedIn } from './js/auth.js';
+
     redirectIfLoggedIn();
+
     document.getElementById('signup-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
       const errEl = document.getElementById('error-msg');
-      btn.textContent = 'Creating...'; btn.disabled = true; errEl.classList.add('hidden');
+      btn.textContent = 'Creating account...'; btn.disabled = true;
+      errEl.classList.add('hidden');
       try {
         const data = await api.auth.signup({
           name: document.getElementById('name').value.trim(),
@@ -56,10 +102,12 @@
           email: document.getElementById('email').value.trim(),
           password: document.getElementById('password').value,
         });
-        saveSession(data); window.location.href = 'dashboard.html';
+        saveSession(data);
+        window.location.href = 'dashboard.html';
       } catch (err) {
-        errEl.textContent = err.message || 'Signup failed';
-        errEl.classList.remove('hidden'); btn.textContent = 'Create Account'; btn.disabled = false;
+        errEl.textContent = err.message || 'Signup failed. Please try again.';
+        errEl.classList.remove('hidden');
+        btn.textContent = 'Create Account'; btn.disabled = false;
       }
     });
   </script>
