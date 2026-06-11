@@ -18,17 +18,23 @@ public class DashboardController {
     private final PlayerRepository playerRepository;
     private final PPIScoreRepository ppiScoreRepository;
     private final MPIScoreRepository mpiScoreRepository;
+    private final PracticeSessionRepository practiceSessionRepository;
+    private final MatchSessionRepository matchSessionRepository;
 
     public DashboardController(CoachRepository coachRepository,
                                TeamRepository teamRepository,
                                PlayerRepository playerRepository,
                                PPIScoreRepository ppiScoreRepository,
-                               MPIScoreRepository mpiScoreRepository) {
+                               MPIScoreRepository mpiScoreRepository,
+                               PracticeSessionRepository practiceSessionRepository,
+                               MatchSessionRepository matchSessionRepository) {
         this.coachRepository = coachRepository;
         this.teamRepository = teamRepository;
         this.playerRepository = playerRepository;
         this.ppiScoreRepository = ppiScoreRepository;
         this.mpiScoreRepository = mpiScoreRepository;
+        this.practiceSessionRepository = practiceSessionRepository;
+        this.matchSessionRepository = matchSessionRepository;
     }
 
     @GetMapping
@@ -47,6 +53,10 @@ public class DashboardController {
         else if (avgPpi != null) avgCpi = avgPpi;
         else if (avgMpi != null) avgCpi = avgMpi;
 
-        return ResponseEntity.ok(new DashboardResponse(totalTeams, totalPlayers, avgCpi));
+        long totalPractice = practiceSessionRepository.findByTeamCoachId(coach.getId()).size();
+        long totalMatches = matchSessionRepository.findByTeamCoachId(coach.getId()).size();
+        long totalSessions = totalPractice + totalMatches;
+
+        return ResponseEntity.ok(new DashboardResponse(totalTeams, totalPlayers, avgCpi, totalSessions));
     }
 }

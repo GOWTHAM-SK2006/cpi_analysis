@@ -11,4 +11,5 @@ public class DashboardResponse {
     private long totalTeams;
     private long totalPlayers;
     private Double averageCpi; // (avgPPI + avgMPI) / 2
+    private long totalSessions;
 }

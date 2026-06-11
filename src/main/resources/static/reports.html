@@ -1,48 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reports — CPI Platform</title>
-  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              orange: '#FF7A00',
+              orangeHover: '#E06B00',
+              glow: 'rgba(255, 122, 0, 0.15)',
+              bg: '#0B0B0B',
+              card: '#141414',
+              border: '#222222',
+              muted: '#7F7F7F',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0B0B0B;
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-shadow {
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    .glow-hover:hover {
+      box-shadow: 0 0 20px rgba(255, 122, 0, 0.15);
+      border-color: #FF7A00;
+    }
+  </style>
 </head>
-<body>
-  <div id="navbar-placeholder"></div>
+<body class="text-gray-100 min-h-screen flex flex-col pb-12">
+  <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
 
-  <main class="container">
-    <div class="page-header">
-      <h1>Reports</h1>
-      <p>Generate player and team performance reports</p>
+  <main class="container mx-auto px-4 mt-8 max-w-7xl flex-grow">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">Reports</h1>
+      <p class="text-brand-muted text-sm mt-1">Generate and analyze player and team performance reports</p>
     </div>
-    <div class="page-content">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
-        <!-- Player Report -->
-        <div class="card">
-          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Player Report</h2>
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="form-label">Select Player</label>
-            <select id="report-player" class="form-control"></select>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <!-- Player Report Card -->
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">👤</div>
+          <div>
+            <h2 class="text-lg font-bold text-white">Player Report</h2>
+            <p class="text-xs text-brand-muted">Individual performance index metrics</p>
           </div>
-          <button id="gen-player-btn" class="btn btn-primary w-full">Generate Player Report</button>
         </div>
-        <!-- Team Report -->
-        <div class="card">
-          <h2 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Team Report</h2>
-          <div class="form-group" style="margin-bottom:1rem;">
-            <label class="form-label">Select Team</label>
-            <select id="report-team" class="form-control"></select>
-          </div>
-          <button id="gen-team-btn" class="btn btn-primary w-full">Generate Team Report</button>
+        
+        <div class="mb-6">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Select Player</label>
+          <select id="report-player" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
         </div>
+        
+        <button id="gen-player-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-brand-bg font-extrabold text-sm py-3 px-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 active:scale-[0.98]">
+          Generate Player Report
+        </button>
       </div>
 
-      <div id="report-output"></div>
-
-      <div id="reports-empty" class="empty-state" style="display:none;">
-        <div class="empty-icon">📊</div>
-        <h3>Select a player or team above</h3>
-        <p>Reports will appear here once generated.</p>
+      <!-- Team Report Card -->
+      <div class="bg-brand-card border border-brand-border rounded-2xl p-6 transition-all duration-300 glow-hover custom-shadow">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-brand-orange text-lg">🛡️</div>
+          <div>
+            <h2 class="text-lg font-bold text-white">Team Report</h2>
+            <p class="text-xs text-brand-muted">Consolidated team performance index metrics</p>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">Select Team</label>
+          <select id="report-team" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
+        </div>
+        
+        <button id="gen-team-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-brand-bg font-extrabold text-sm py-3 px-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 active:scale-[0.98]">
+          Generate Team Report
+        </button>
       </div>
+    </div>
+
+    <!-- Output Section -->
+    <div id="report-output" class="space-y-6"></div>
+
+    <!-- Empty State -->
+    <div id="reports-empty" class="bg-brand-card border border-brand-border rounded-2xl p-12 text-center custom-shadow">
+      <div class="text-5xl mb-4">📊</div>
+      <h3 class="text-lg font-bold text-white">Select a player or team above</h3>
+      <p class="text-brand-muted text-sm mt-1 max-w-sm mx-auto">Click "Generate Report" to visualize performance rankings and historical scores.</p>
     </div>
   </main>
 
