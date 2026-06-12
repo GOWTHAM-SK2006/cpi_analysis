@@ -29,7 +29,7 @@ function closeModal() {
   modalEl.classList.remove('flex');
 }
 
-// Role badge color helper
+// Role badge styling
 function roleBadge(role) {
   const colors = {
     'Batsman':     'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -46,7 +46,7 @@ async function init() {
     populateTeamSelect();
     renderPlayers(allPlayers);
   } catch {
-    showToast('Failed to load data', 'error');
+    showToast('Failed to load roster data', 'error');
   }
 }
 
@@ -63,41 +63,55 @@ function renderPlayers(players) {
   }
   emptyEl.classList.add('hidden');
 
-  // Render as responsive card grid
-  listEl.innerHTML = `
-    <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden" style="box-shadow:0 4px 20px rgba(0,0,0,0.4)">
-      <!-- Table header -->
-      <div class="hidden md:grid grid-cols-[2fr_1fr_1fr_1.5fr_1.5fr_1.5fr_auto] px-5 py-3 border-b border-brand-border gap-4">
-        ${['Name','Age','Role','Batting','Bowling','Team','Actions'].map(h =>
-          `<div class="text-[10px] font-bold uppercase tracking-widest text-brand-muted">${h}</div>`
-        ).join('')}
+  listEl.innerHTML = players.map(p => `
+    <div class="glass-card p-6 flex flex-col justify-between gap-6">
+      
+      <!-- Top Section: Avatar, Bio and Role -->
+      <div class="flex items-start gap-4">
+        <!-- Jersey representation -->
+        <div class="w-12 h-12 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-brand-orange font-black text-sm flex-shrink-0">
+          #${p.id}
+        </div>
+        <div class="min-w-0 flex-grow">
+          <div class="flex items-start justify-between gap-2">
+            <h3 class="text-base font-black text-white truncate tracking-tight">${p.name}</h3>
+            <span class="inline-block text-[9px] font-black px-2 py-1 rounded-lg border uppercase tracking-wider ${roleBadge(p.role)}">
+              ${p.role}
+            </span>
+          </div>
+          <p class="text-xs text-brand-muted mt-1 font-bold uppercase tracking-wider">${p.teamName} · Age ${p.age}</p>
+        </div>
       </div>
-      <!-- Rows -->
-      ${players.map(p => `
-        <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1.5fr_1.5fr_1.5fr_auto] px-5 py-4 border-b border-brand-border/60 last:border-b-0 gap-2 md:gap-4 items-center hover:bg-brand-orange/[0.02] transition-colors">
-          <div>
-            <a href="player-detail.html?id=${p.id}" class="font-bold text-sm text-brand-orange hover:underline">${p.name}</a>
-            <div class="text-xs text-brand-muted md:hidden mt-0.5">${p.teamName} · Age ${p.age}</div>
-          </div>
-          <div class="hidden md:block text-sm text-gray-300">${p.age}</div>
-          <div>
-            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-md border ${roleBadge(p.role)}">${p.role}</span>
-          </div>
-          <div class="hidden md:block text-xs text-brand-muted">${p.battingStyle}</div>
-          <div class="hidden md:block text-xs text-brand-muted">${p.bowlingStyle}</div>
-          <div class="hidden md:block text-xs text-brand-muted">${p.teamName}</div>
-          <div class="flex gap-2">
-            <button onclick="editPlayer(${p.id})"
-              class="text-xs font-bold px-3 py-1.5 rounded-lg border border-brand-border text-gray-300 hover:border-brand-orange hover:text-brand-orange transition-all">
-              Edit
-            </button>
-            <button onclick="deletePlayer(${p.id}, '${p.name.replace(/'/g,"\\'")}')"
-              class="text-xs font-bold px-3 py-1.5 rounded-lg border border-red-900/40 text-red-400 hover:bg-red-950/20 transition-all">
-              Delete
-            </button>
-          </div>
-        </div>`).join('')}
-    </div>`;
+
+      <!-- Center details: Specs styles -->
+      <div class="grid grid-cols-2 gap-2 border-y border-white/5 py-4">
+        <div>
+          <span class="block text-[8px] font-bold text-brand-muted uppercase tracking-widest">Batting</span>
+          <span class="text-xs font-semibold text-gray-200 mt-0.5 block truncate">${p.battingStyle || 'None'}</span>
+        </div>
+        <div>
+          <span class="block text-[8px] font-bold text-brand-muted uppercase tracking-widest">Bowling</span>
+          <span class="text-xs font-semibold text-gray-200 mt-0.5 block truncate">${p.bowlingStyle || 'None'}</span>
+        </div>
+      </div>
+
+      <!-- Action items -->
+      <div class="flex items-center gap-2">
+        <a href="player-detail.html?id=${p.id}" 
+           class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+          Profile
+        </a>
+        <button onclick="editPlayer(${p.id})" 
+                class="text-[10px] font-black bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+          Edit
+        </button>
+        <button onclick="deletePlayer(${p.id}, '${p.name.replace(/'/g,"\\'")}')" 
+                class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+          Delete
+        </button>
+      </div>
+
+    </div>`).join('');
 }
 
 searchInput?.addEventListener('input', () => {

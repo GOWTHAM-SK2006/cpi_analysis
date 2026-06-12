@@ -33,3 +33,5 @@ Thumbs.db
 *.log
 logs/
 .m2/
+pg_data/
+startup.log

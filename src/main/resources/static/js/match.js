@@ -77,26 +77,33 @@ function renderSessions(sessions) {
   emptyEl.classList.add('hidden');
 
   listEl.innerHTML = sessions.map(s => `
-    <div class="bg-brand-card border border-brand-border rounded-2xl px-5 py-4 flex items-center justify-between gap-4 hover:border-brand-orange/40 transition-all duration-200" style="box-shadow:0 4px 20px rgba(0,0,0,0.4)">
-      <div class="flex items-center gap-4 min-w-0">
-        <div class="w-10 h-10 flex-shrink-0 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-lg">🏏</div>
+    <div class="glass-card p-6 md:p-8 flex flex-col justify-between gap-6">
+      
+      <!-- Top Match Info -->
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-brand-orange/15 border border-brand-orange/20 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
+          🏏
+        </div>
         <div class="min-w-0">
-          <div class="font-bold text-white text-sm">vs ${s.opponent}</div>
-          <div class="text-brand-muted text-xs mt-0.5">
-            ${s.teamName} · 📅 ${s.date}${s.notes ? ' · ' + s.notes : ''}
-          </div>
+          <h3 class="text-base font-black text-white tracking-tight">vs ${s.opponent}</h3>
+          <p class="text-xs text-brand-muted mt-1 font-bold uppercase tracking-wider">${s.teamName}</p>
+          <p class="text-xs text-brand-muted mt-0.5">📅 ${s.date}</p>
+          ${s.notes ? `<p class="text-xs text-brand-muted mt-2 italic bg-white/5 border border-white/5 p-2.5 rounded-xl">${s.notes}</p>` : ''}
         </div>
       </div>
-      <div class="flex gap-2 flex-shrink-0">
+
+      <!-- Action items -->
+      <div class="flex items-center gap-2">
         <a href="match-score.html?sessionId=${s.id}&teamId=${s.teamId}"
-          class="text-xs font-bold px-3 py-1.5 rounded-lg bg-brand-orange hover:bg-orange-600 text-white transition-all">
+           class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
           Score Players
         </a>
         <button onclick="deleteSession(${s.id})"
-          class="text-xs font-bold px-3 py-1.5 rounded-lg border border-red-900/40 text-red-400 hover:bg-red-950/20 transition-all">
+                class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
           Delete
         </button>
       </div>
+
     </div>`).join('');
 }
 
@@ -133,10 +140,10 @@ async function initScorePage() {
 
   if (!players.length) {
     container.innerHTML = `
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-12 text-center">
-        <div class="text-5xl mb-4">👤</div>
-        <h3 class="text-lg font-bold text-white">No players in this team</h3>
-        <p class="text-brand-muted text-sm mt-1">Add players to the squad first.</p>
+      <div class="glass-card p-12 text-center">
+        <div class="text-4xl mb-3">👤</div>
+        <h3 class="text-sm font-black text-white uppercase tracking-wider">No players in this team</h3>
+        <p class="text-xs text-brand-muted mt-1">Add players to the squad first.</p>
       </div>`;
     return;
   }
@@ -147,33 +154,33 @@ async function initScorePage() {
     const sliders = pillars.map((key, i) => `
       <div class="flex flex-col gap-2">
         <div class="flex justify-between items-center">
-          <label class="text-xs font-semibold text-brand-muted">${labels[i]}</label>
-          <span class="text-xs font-black text-brand-orange bg-brand-orange/10 border border-brand-orange/20 px-2 py-0.5 rounded-md min-w-[28px] text-center" id="val-${p.id}-${key}">${ex ? ex[key] : 5}</span>
+          <label class="text-[10px] font-bold text-brand-muted uppercase tracking-wider">${labels[i]}</label>
+          <span class="text-xs font-black text-brand-orange bg-brand-orange/10 border border-brand-orange/20 px-2.5 py-0.5 rounded-md min-w-[32px] text-center" id="val-${p.id}-${key}">${ex ? ex[key] : 5}</span>
         </div>
         <input type="range" min="1" max="10" value="${ex ? ex[key] : 5}"
           id="slider-${p.id}-${key}"
           oninput="document.getElementById('val-${p.id}-${key}').textContent=this.value"
-          class="w-full h-2 rounded-full appearance-none bg-brand-border cursor-pointer">
+          class="w-full app-slider">
       </div>`).join('');
 
     const badge = ex
-      ? `<span class="text-xs font-bold bg-green-500/10 border border-green-500/20 text-green-400 px-2.5 py-1 rounded-lg">MPI: ${ex.mpi.toFixed(1)}</span>`
-      : `<span class="text-xs font-bold bg-brand-border/50 border border-brand-border text-brand-muted px-2.5 py-1 rounded-lg">Not scored</span>`;
+      ? `<span class="text-xs font-bold bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-xl uppercase">MPI: ${ex.mpi.toFixed(1)}</span>`
+      : `<span class="text-xs font-bold bg-white/5 border border-white/5 text-brand-muted px-3 py-1 rounded-xl uppercase">Not Scored</span>`;
 
     return `
-      <div class="bg-brand-card border border-brand-border rounded-2xl p-6" style="box-shadow:0 4px 20px rgba(0,0,0,0.4)">
+      <div class="glass-card p-6 md:p-8">
         <div class="flex justify-between items-center mb-6">
           <div>
-            <div class="font-bold text-white text-base">${p.name}</div>
-            <div class="text-brand-muted text-xs mt-0.5">${p.role}</div>
+            <h3 class="font-black text-white text-base tracking-tight">${p.name}</h3>
+            <p class="text-brand-muted text-xs mt-0.5">${p.role} · ${p.teamName}</p>
           </div>
           ${badge}
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
           ${sliders}
         </div>
         <button onclick="saveScore(${sessionId},${p.id})"
-          class="w-full bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-sm py-3 rounded-xl transition-all active:scale-[0.98]">
+          class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce uppercase tracking-wider">
           Save MPI Score
         </button>
       </div>`;

@@ -15,10 +15,11 @@
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              bg: '#060606',
-              card: 'rgba(20, 20, 20, 0.6)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              muted: '#8E8E93'
+              gold: '#F5B041',
+              bg: '#050505',
+              card: '#0F1117',
+              border: 'rgba(255, 255, 255, 0.07)',
+              muted: '#B0B0B0'
             }
           }
         }
@@ -26,60 +27,49 @@
     }
   </script>
 </head>
-<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
-  
-  <!-- Outer Mobile Simulator Wrapper -->
-  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between p-6 shadow-2xl relative border-x border-brand-border">
-    
-    <!-- Top Spacer / Design element -->
-    <div class="flex justify-between items-center mt-4">
-      <div class="text-xs font-black tracking-widest text-brand-orange uppercase">CPI Platform</div>
-      <div class="w-2.5 h-2.5 rounded-full bg-brand-orange pulse-glow"></div>
-    </div>
+<body class="text-gray-100 min-h-screen antialiased">
 
-    <!-- Main Form Content -->
-    <div class="my-auto py-8">
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-black tracking-tight text-white select-none">
-          CPI<span class="text-brand-orange">.</span>
-        </h1>
-        <p class="text-brand-muted text-xs font-semibold uppercase tracking-widest mt-2">Cricket Performance Index</p>
+  <div class="auth-page">
+    <div class="auth-container">
+
+      <div class="auth-status-bar">
+        <span class="auth-status-label">CPI Platform</span>
+        <span class="auth-live-dot"></span>
       </div>
 
-      <!-- Glass Card -->
-      <div class="glass-card p-6 border border-brand-border">
-        <h2 class="text-xl font-bold text-white mb-1">Welcome Coach</h2>
-        <p class="text-brand-muted text-xs mb-6">Sign in to your sports analytics command center</p>
+      <div class="auth-logo">
+        <div class="welcome-avatar mx-auto mb-4" style="width:72px;height:72px;font-size:2rem;">🏏</div>
+        <h1>CPI<span>.</span></h1>
+        <p>Cricket Performance Intelligence</p>
+      </div>
 
-        <div id="error-msg" class="hidden mb-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl px-4 py-3 font-semibold"></div>
+      <div class="glass-card auth-card">
+        <h2>Welcome Coach</h2>
+        <p class="auth-subtitle">Sign in to your sports analytics command center</p>
 
-        <form id="login-form" class="flex flex-col gap-4">
+        <div id="error-msg" class="hidden mb-4 bg-red-500/10 border border-red-500/25 text-red-400 text-xs rounded-xl px-4 py-3 font-semibold"></div>
+
+        <form id="login-form" class="flex flex-col gap-5">
           <div>
-            <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="email">Email Address</label>
-            <input id="email" type="email" placeholder="coach@academy.com" required
-              class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            <label class="app-label" for="email">Email Address</label>
+            <input id="email" type="email" placeholder="coach@academy.com" required class="app-input">
           </div>
           <div>
-            <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5" for="password">Password</label>
-            <input id="password" type="password" placeholder="••••••••" required
-              class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+            <label class="app-label" for="password">Password</label>
+            <input id="password" type="password" placeholder="••••••••" required class="app-input">
           </div>
-          <button type="submit" id="submit-btn"
-            class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-black text-xs uppercase tracking-wider py-4 rounded-xl transition-all shadow-lg shadow-brand-orange/15 click-bounce mt-2">
+          <button type="submit" id="submit-btn" class="btn-primary w-full click-bounce mt-1" style="padding:1rem;">
             Sign In
           </button>
         </form>
       </div>
-    </div>
 
-    <!-- Footer signup link -->
-    <div class="text-center pb-4">
-      <p class="text-xs text-brand-muted">
+      <div class="auth-footer">
         Don't have an account?
-        <a href="signup.html" class="text-brand-orange font-bold hover:underline ml-1">Create Account →</a>
-      </p>
-    </div>
+        <a href="signup.html">Create Account →</a>
+      </div>
 
+    </div>
   </div>
 
   <script type="module" src="js/login.js"></script>

@@ -15,10 +15,11 @@
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              bg: '#060606',
-              card: 'rgba(20, 20, 20, 0.6)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              muted: '#8E8E93'
+              gold: '#F5B041',
+              bg: '#050505',
+              card: '#0F1117',
+              border: 'rgba(255, 255, 255, 0.07)',
+              muted: '#B0B0B0'
             }
           }
         }
@@ -26,72 +27,62 @@
     }
   </script>
 </head>
-<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
+<body class="app-shell text-gray-100 min-h-screen antialiased">
 
-  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
-    
-    <!-- Header Placeholder -->
-    <div id="navbar-placeholder"></div>
+  <div id="navbar-placeholder"></div>
 
-    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
-      
-      <!-- Page Title -->
-      <div class="flex items-center justify-between">
+  <main class="app-main space-y-6">
+
+    <div class="page-header">
+      <div>
+        <div class="page-eyebrow">Athlete Roster</div>
+        <h1>Academy Players</h1>
+        <p class="page-header-sub">Manage & track athlete details</p>
+      </div>
+      <button id="add-player-btn" class="btn-primary click-bounce">
+        + Add Player
+      </button>
+    </div>
+
+    <div class="search-wrapper">
+      <span class="search-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </span>
+      <input id="search-input" type="text" placeholder="Search by name or squad..." class="app-input">
+    </div>
+
+    <div id="players-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+
+    <div id="players-empty" class="hidden glass-card empty-state">
+      <div class="empty-state-icon">🏃</div>
+      <h3>Roster is Empty</h3>
+      <p>Add athletes to squads to begin grading practice (PPI) and match (MPI) performance index values.</p>
+      <button class="btn-primary click-bounce" onclick="document.getElementById('add-player-btn').click()">+ Add Athlete</button>
+    </div>
+
+  </main>
+
+  <div id="player-modal" class="hidden fixed inset-0 z-50 modal-overlay items-center justify-center px-4">
+    <div class="glass-modal w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between p-6 border-b border-white/5 sticky top-0 bg-[#0a0b0f]/95 backdrop-blur-xl z-10">
         <div>
-          <h1 class="text-xl font-black text-white">Academy Roster</h1>
-          <p class="text-[11px] text-brand-muted mt-0.5">Manage and view athlete profiles</p>
+          <div class="page-eyebrow" style="margin-bottom:0.25rem;">Athlete</div>
+          <h2 class="text-base font-black text-white" id="modal-title">Add Player</h2>
         </div>
-        <button id="add-player-btn"
-          class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce shadow-lg shadow-brand-orange/15">
-          + Add Player
-        </button>
+        <button class="modal-close text-brand-muted hover:text-white transition-colors text-xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5">✕</button>
       </div>
-
-      <!-- Search Input -->
-      <div class="relative">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted text-xs">🔍</span>
-        <input id="search-input" type="text" placeholder="Search by name or squad..."
-          class="w-full bg-brand-card border border-brand-border rounded-xl pl-10 pr-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
-      </div>
-
-      <!-- Players List -->
-      <div id="players-list" class="space-y-3"></div>
-
-      <!-- Empty State -->
-      <div id="players-empty" class="hidden glass-card border border-brand-border p-8 text-center">
-        <div class="text-4xl mb-3">👤</div>
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Roster is Empty</h3>
-        <p class="text-[10px] text-brand-muted mt-2 mb-5">Add players to squads to begin grading practice and match CPI scores.</p>
-        <button class="bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all click-bounce"
-          onclick="document.getElementById('add-player-btn').click()">+ Add Athlete</button>
-      </div>
-
-    </main>
-
-  </div>
-
-  <!-- Player Modal Dialog -->
-  <div id="player-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm items-center justify-center px-4">
-    <div class="glass-modal border border-brand-border rounded-2xl w-full max-w-xs md:max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between p-5 border-b border-brand-border sticky top-0 bg-[#0d0d0d] z-10">
-        <h2 class="text-sm font-black text-white uppercase tracking-wider" id="modal-title">Add Player</h2>
-        <button class="modal-close text-brand-muted hover:text-white transition-colors text-lg">✕</button>
-      </div>
-      <form id="player-form" class="p-5 flex flex-col gap-4">
+      <form id="player-form" class="p-6 flex flex-col gap-5">
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Full Name *</label>
-          <input id="player-name" type="text" placeholder="Player name" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+          <label class="app-label">Full Name *</label>
+          <input id="player-name" type="text" placeholder="Player name" required class="app-input">
         </div>
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Age *</label>
-          <input id="player-age" type="number" placeholder="e.g. 17" min="5" max="60" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-brand-orange transition-all">
+          <label class="app-label">Age *</label>
+          <input id="player-age" type="number" placeholder="e.g. 17" min="5" max="60" required class="app-input">
         </div>
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Role *</label>
-          <select id="player-role" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
+          <label class="app-label">Role *</label>
+          <select id="player-role" required class="app-select">
             <option value="">Select role</option>
             <option>Batsman</option>
             <option>Bowler</option>
@@ -100,23 +91,20 @@
           </select>
         </div>
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Team *</label>
-          <select id="player-team" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all"></select>
+          <label class="app-label">Team *</label>
+          <select id="player-team" required class="app-select"></select>
         </div>
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Batting Style *</label>
-          <select id="player-batting" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
+          <label class="app-label">Batting Style *</label>
+          <select id="player-batting" required class="app-select">
             <option value="">Select style</option>
             <option>Right-hand bat</option>
             <option>Left-hand bat</option>
           </select>
         </div>
         <div>
-          <label class="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Bowling Style *</label>
-          <select id="player-bowling" required
-            class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
+          <label class="app-label">Bowling Style *</label>
+          <select id="player-bowling" required class="app-select">
             <option value="">Select style</option>
             <option>Right-arm fast</option>
             <option>Right-arm medium</option>
@@ -126,9 +114,9 @@
             <option>None</option>
           </select>
         </div>
-        <div class="flex gap-2 pt-2">
-          <button type="button" class="btn-cancel flex-1 bg-[#0d0d0d] border border-brand-border text-gray-300 font-bold text-xs py-3 rounded-xl hover:border-gray-500 transition-all click-bounce">Cancel</button>
-          <button type="submit" class="flex-1 bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">Save Player</button>
+        <div class="flex gap-3 pt-1">
+          <button type="button" class="btn-ghost flex-1 btn-cancel click-bounce">Cancel</button>
+          <button type="submit" class="btn-primary flex-1 click-bounce">Save Player</button>
         </div>
       </form>
     </div>

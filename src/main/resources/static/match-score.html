@@ -15,10 +15,11 @@
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              bg: '#060606',
-              card: 'rgba(20, 20, 20, 0.6)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              muted: '#8E8E93'
+              gold: '#F5B041',
+              bg: '#050505',
+              card: '#0F1117',
+              border: 'rgba(255, 255, 255, 0.07)',
+              muted: '#B0B0B0'
             }
           }
         }
@@ -26,31 +27,25 @@
     }
   </script>
 </head>
-<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
+<body class="app-shell text-gray-100 min-h-screen antialiased">
 
-  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
-    
-    <!-- Header Placeholder -->
-    <div id="navbar-placeholder"></div>
+  <div id="navbar-placeholder"></div>
 
-    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
-      
-      <!-- Back to list & title -->
-      <div>
-        <a href="match-sessions.html"
-          class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-[10px] font-black uppercase tracking-wider mb-3 transition-colors">
-          ← Back to Matches
-        </a>
-        <h1 class="text-xl font-black text-white">MPI Grading</h1>
-        <p class="text-[11px] text-brand-muted mt-0.5">Rate players across 5 match pillars (1-10)</p>
-      </div>
+  <main class="app-main space-y-6">
 
-      <!-- Score Cards List -->
-      <div id="score-list" class="space-y-4"></div>
+    <div class="page-header" style="display:block;border-bottom:none;padding-bottom:0;">
+      <a href="match-sessions.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to Matches
+      </a>
+      <div class="page-eyebrow">MPI Grading</div>
+      <h1>Match Performance Index</h1>
+      <p class="page-header-sub">Rate players across 5 match pillars (1–10)</p>
+    </div>
 
-    </main>
+    <div id="score-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
 
-  </div>
+  </main>
 
   <script type="module" src="js/match.js"></script>
 </body>

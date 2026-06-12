@@ -15,10 +15,11 @@
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              bg: '#060606',
-              card: 'rgba(20, 20, 20, 0.6)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              muted: '#8E8E93'
+              gold: '#F5B041',
+              bg: '#050505',
+              card: '#0F1117',
+              border: 'rgba(255, 255, 255, 0.07)',
+              muted: '#B0B0B0'
             }
           }
         }
@@ -26,49 +27,38 @@
     }
   </script>
 </head>
-<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
+<body class="app-shell text-gray-100 min-h-screen antialiased">
 
-  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
-    
-    <!-- Header Placeholder -->
-    <div id="navbar-placeholder"></div>
+  <div id="navbar-placeholder"></div>
 
-    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
-      
-      <!-- Back button and bio header -->
-      <div>
-        <a href="players.html"
-          class="inline-flex items-center gap-1.5 text-brand-orange hover:text-orange-400 text-[10px] font-black uppercase tracking-wider mb-3 transition-colors">
-          ← Back to Players
-        </a>
-        <div id="player-header">
-          <!-- Bio details populated dynamically -->
-          <div class="skeleton h-4 w-40 rounded mb-1.5"></div>
-          <div class="skeleton h-2 w-2/3 rounded"></div>
-        </div>
+  <main class="app-main space-y-6">
+
+    <div class="page-header" style="display:block;border-bottom:none;padding-bottom:0;">
+      <a href="players.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to Players
+      </a>
+      <div id="player-header">
+        <div class="skeleton h-8 w-64 rounded-xl mb-2"></div>
+        <div class="skeleton h-4 w-80 rounded-xl"></div>
       </div>
+    </div>
 
-      <!-- Detail scores and histories -->
-      <div id="player-content" class="space-y-6">
-        <div class="flex items-center justify-center py-20 text-brand-muted text-xs">
-          <span class="animate-pulse">Loading athlete data...</span>
-        </div>
+    <div id="player-content">
+      <div class="glass-card empty-state" style="min-height:240px;">
+        <div class="empty-state-icon" style="animation:none;width:56px;height:56px;font-size:1.5rem;">⏳</div>
+        <p class="text-brand-muted text-sm">Loading athlete data...</p>
       </div>
+    </div>
 
-    </main>
-
-  </div>
+  </main>
 
   <script type="module">
     import { requireAuth } from './js/auth.js';
     import { api } from './js/api.js';
     import { renderNavbar, formatScore, scoreColor } from './js/layout.js';
 
-    // Enforce authentication
-    try {
-      requireAuth();
-    } catch(e) {}
-
+    try { requireAuth(); } catch(e) {}
     renderNavbar('players.html');
 
     const playerId = new URLSearchParams(window.location.search).get('id');
@@ -78,78 +68,84 @@
       const d = await api.reports.player(playerId);
       document.title = `${d.name} — CPI`;
 
-      // Render header details
       document.getElementById('player-header').innerHTML = `
-        <h1 class="text-xl font-black text-white">${d.name}</h1>
-        <p class="text-[10px] text-brand-muted mt-0.5 font-bold uppercase tracking-wider">
-          ${d.role} · ${d.teamName} · Age ${d.age}
-        </p>
-        <p class="text-[9px] text-brand-muted mt-0.5 font-bold uppercase tracking-wider">
-          🏏 ${d.battingStyle} · ⚾ ${d.bowlingStyle}
-        </p>`;
-
-      // Score box template
-      const scoreBox = (label, val, sub) => `
-        <div class="glass-card p-4 text-center border border-brand-border flex-1">
-          <div class="text-[9px] font-bold uppercase tracking-wider text-brand-muted mb-1">${label}</div>
-          <div class="text-2xl font-black" style="color:${scoreColor(val)}">${formatScore(val)}</div>
-          <div class="text-[8px] text-brand-muted mt-0.5">${sub}</div>
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">${d.name}</h1>
+            <p class="text-xs text-brand-muted mt-1 font-bold uppercase tracking-wider">
+              ${d.role}
+              <span class="mx-2 text-white/10">|</span>${d.teamName}
+              <span class="mx-2 text-white/10">|</span>Age ${d.age}
+              <span class="mx-2 text-white/10">|</span>${d.battingStyle}
+              <span class="mx-2 text-white/10">|</span>${d.bowlingStyle}
+            </p>
+          </div>
         </div>`;
 
-      // Table cell helpers
-      const tdClass = "px-3 py-2 text-xs border-b border-brand-border/40 text-gray-300";
-      const thClass = "px-3 py-1.5 text-[9px] font-black uppercase text-brand-muted bg-[#0d0d0d] border-b border-brand-border/60 text-left";
+      const scoreBox = (label, val, sub) => `
+        <div class="glass-card p-6 md:p-8 text-center hover:border-brand-orange/30 transition-all">
+          <div class="text-[10px] font-black uppercase tracking-widest text-brand-muted mb-3">${label}</div>
+          <div class="text-4xl font-black" style="color:${scoreColor(val)}">${formatScore(val)}</div>
+          <div class="text-[10px] text-brand-muted mt-2 font-bold uppercase tracking-wider">${sub}</div>
+        </div>`;
 
-      // Practice table rows
+      const thClass = "px-4 py-3 text-[10px] font-black uppercase tracking-widest text-brand-muted text-left bg-[#0d0d0d] border-b border-white/5";
+      const tdClass = "px-4 py-3 text-xs border-b border-white/5 text-gray-300";
+
       const ppiRows = d.ppiHistory.length
         ? d.ppiHistory.map(s => `
-            <tr>
-              <td class="${tdClass} font-bold text-white">S#${s.practiceSessionId}</td>
-              <td class="${tdClass}">${s.trainingIntensity}</td>
-              <td class="${tdClass}">${s.focus}</td>
-              <td class="${tdClass}">${s.coachability}</td>
-              <td class="${tdClass} font-black" style="color:${scoreColor(s.ppi)}">${s.ppi.toFixed(1)}</td>
-            </tr>`).join('')
-        : `<tr><td colspan="5" class="${tdClass} text-center py-6 text-brand-muted">No practice scores logged</td></tr>`;
+          <tr class="hover:bg-white/[0.02] transition-colors">
+            <td class="${tdClass} font-bold text-white">Session #${s.practiceSessionId}</td>
+            <td class="${tdClass}">${s.trainingIntensity}</td>
+            <td class="${tdClass}">${s.skillExecution}</td>
+            <td class="${tdClass}">${s.focus}</td>
+            <td class="${tdClass}">${s.coachability}</td>
+            <td class="${tdClass}">${s.adaptability}</td>
+            <td class="${tdClass} font-black text-right" style="color:${scoreColor(s.ppi)}">${s.ppi.toFixed(1)}</td>
+          </tr>`).join('')
+        : `<tr><td colspan="7" class="${tdClass} text-center py-10 text-brand-muted">No practice scores logged yet</td></tr>`;
 
-      // Match table rows
       const mpiRows = d.mpiHistory.length
         ? d.mpiHistory.map(s => `
-            <tr>
-              <td class="${tdClass} font-bold text-white">M#${s.matchSessionId}</td>
-              <td class="${tdClass}">${s.technicalExecution}</td>
-              <td class="${tdClass}">${s.mentalResilience}</td>
-              <td class="${tdClass}">${s.competitiveImpact}</td>
-              <td class="${tdClass} font-black" style="color:${scoreColor(s.mpi)}">${s.mpi.toFixed(1)}</td>
-            </tr>`).join('')
-        : `<tr><td colspan="5" class="${tdClass} text-center py-6 text-brand-muted">No match scores logged</td></tr>`;
+          <tr class="hover:bg-white/[0.02] transition-colors">
+            <td class="${tdClass} font-bold text-white">Match #${s.matchSessionId}</td>
+            <td class="${tdClass}">${s.technicalExecution}</td>
+            <td class="${tdClass}">${s.decisionMaking}</td>
+            <td class="${tdClass}">${s.matchAwareness}</td>
+            <td class="${tdClass}">${s.mentalResilience}</td>
+            <td class="${tdClass}">${s.competitiveImpact}</td>
+            <td class="${tdClass} font-black text-right" style="color:${scoreColor(s.mpi)}">${s.mpi.toFixed(1)}</td>
+          </tr>`).join('')
+        : `<tr><td colspan="7" class="${tdClass} text-center py-10 text-brand-muted">No match scores logged yet</td></tr>`;
 
       document.getElementById('player-content').innerHTML = `
-        <!-- KPI score widgets -->
-        <div class="flex gap-2">
-          ${scoreBox('CPI', d.cpi, 'Combined')}
-          ${scoreBox('PPI', d.averagePpi, 'Practice Avg')}
-          ${scoreBox('MPI', d.averageMpi, 'Match Avg')}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+          ${scoreBox('CPI', d.cpi, 'Combined Performance Index')}
+          ${scoreBox('PPI', d.averagePpi, 'Practice Average')}
+          ${scoreBox('MPI', d.averageMpi, 'Match Average')}
         </div>
 
-        <!-- Practice (PPI) history -->
-        <div class="glass-card border border-brand-border overflow-hidden">
-          <div class="px-4 py-3 border-b border-brand-border flex justify-between items-center">
+        <div class="glass-card overflow-hidden">
+          <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
             <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Practice Logs (PPI)</h3>
-              <p class="text-[9px] text-brand-muted mt-0.5">${d.ppiHistory.length} logs recorded</p>
+              <h2 class="text-sm font-black text-white uppercase tracking-wider">
+                Practice History <span class="text-brand-orange ml-1">(PPI)</span>
+              </h2>
+              <p class="text-xs text-brand-muted mt-0.5">${d.ppiHistory.length} session${d.ppiHistory.length !== 1 ? 's' : ''} logged</p>
             </div>
-            <span class="text-[9px] bg-brand-orange/10 border border-brand-orange/20 text-brand-orange px-2 py-0.5 rounded font-bold">PPI</span>
+            <span class="text-[9px] bg-brand-orange/10 border border-brand-orange/20 text-brand-orange px-3 py-1.5 rounded-xl font-black uppercase tracking-wider">PPI</span>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full">
               <thead>
                 <tr>
-                  <th class="${thClass}">Log</th>
+                  <th class="${thClass}">Session</th>
                   <th class="${thClass}">Intensity</th>
+                  <th class="${thClass}">Skill</th>
                   <th class="${thClass}">Focus</th>
-                  <th class="${thClass}">Coach</th>
-                  <th class="${thClass}">Score</th>
+                  <th class="${thClass}">Coachability</th>
+                  <th class="${thClass}">Adaptability</th>
+                  <th class="${thClass} text-right">PPI</th>
                 </tr>
               </thead>
               <tbody>${ppiRows}</tbody>
@@ -157,24 +153,27 @@
           </div>
         </div>
 
-        <!-- Match (MPI) history -->
-        <div class="glass-card border border-brand-border overflow-hidden">
-          <div class="px-4 py-3 border-b border-brand-border flex justify-between items-center">
+        <div class="glass-card overflow-hidden">
+          <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
             <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Match Logs (MPI)</h3>
-              <p class="text-[9px] text-brand-muted mt-0.5">${d.mpiHistory.length} logs recorded</p>
+              <h2 class="text-sm font-black text-white uppercase tracking-wider">
+                Match History <span class="text-gray-300 ml-1">(MPI)</span>
+              </h2>
+              <p class="text-xs text-brand-muted mt-0.5">${d.mpiHistory.length} match${d.mpiHistory.length !== 1 ? 'es' : ''} scored</p>
             </div>
-            <span class="text-[9px] bg-gray-400/10 border border-gray-400/20 text-gray-300 px-2 py-0.5 rounded font-bold">MPI</span>
+            <span class="text-[9px] bg-white/5 border border-white/5 text-gray-300 px-3 py-1.5 rounded-xl font-black uppercase tracking-wider">MPI</span>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full">
               <thead>
                 <tr>
-                  <th class="${thClass}">Log</th>
-                  <th class="${thClass}">Tech</th>
-                  <th class="${thClass}">Resil</th>
+                  <th class="${thClass}">Match</th>
+                  <th class="${thClass}">Technical</th>
+                  <th class="${thClass}">Decision</th>
+                  <th class="${thClass}">Awareness</th>
+                  <th class="${thClass}">Resilience</th>
                   <th class="${thClass}">Impact</th>
-                  <th class="${thClass}">Score</th>
+                  <th class="${thClass} text-right">MPI</th>
                 </tr>
               </thead>
               <tbody>${mpiRows}</tbody>
@@ -185,10 +184,10 @@
 
     load().catch(err => {
       document.getElementById('player-content').innerHTML = `
-        <div class="glass-card p-8 text-center border border-brand-border">
-          <div class="text-4xl mb-3">⚠️</div>
-          <h3 class="text-xs font-bold text-white uppercase tracking-wider">Loading Error</h3>
-          <p class="text-[10px] text-brand-muted mt-2">${err.message}</p>
+        <div class="glass-card p-12 text-center">
+          <div class="text-4xl mb-4">⚠️</div>
+          <h3 class="text-sm font-black text-white uppercase tracking-wider">Failed to Load Player</h3>
+          <p class="text-xs text-brand-muted mt-2">${err.message}</p>
         </div>`;
     });
   </script>

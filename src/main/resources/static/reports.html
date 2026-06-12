@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Reports — CPI Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <script>
     tailwind.config = {
@@ -15,10 +16,11 @@
             brand: {
               orange: '#FF7A00',
               orangeHover: '#E06B00',
-              bg: '#060606',
-              card: 'rgba(20, 20, 20, 0.6)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              muted: '#8E8E93'
+              gold: '#F5B041',
+              bg: '#050505',
+              card: '#0F1117',
+              border: 'rgba(255, 255, 255, 0.07)',
+              muted: '#B0B0B0'
             }
           }
         }
@@ -26,108 +28,128 @@
     }
   </script>
 </head>
-<body class="text-gray-100 min-h-screen bg-[#050505] flex justify-center items-stretch antialiased">
+<body class="app-shell text-gray-100 min-h-screen antialiased">
 
-  <div class="w-full max-w-md md:max-w-lg min-h-screen bg-[#060606] flex flex-col justify-between pb-24 shadow-2xl relative border-x border-brand-border">
-    
-    <!-- Navigation Placeholder -->
-    <div id="navbar-placeholder"></div>
+  <div id="navbar-placeholder"></div>
 
-    <main class="flex-grow px-4 pt-6 overflow-y-auto space-y-6">
-      
-      <!-- Top Title Bar -->
+  <main class="app-main space-y-6">
+
+    <div class="page-header" style="border-bottom:none;padding-bottom:0;">
       <div>
-        <h1 class="text-xl font-black text-white">Reports Center</h1>
-        <p class="text-[11px] text-brand-muted mt-0.5">Generate and manage cricket performance metrics</p>
+        <div class="page-eyebrow">Analytics Hub</div>
+        <h1>Reports Center</h1>
+        <p class="page-header-sub">Generate academy, squad, and athlete performance intelligence</p>
       </div>
+    </div>
 
-      <!-- High-Level Stats Dashboard Cards -->
-      <div class="grid grid-cols-3 gap-2">
-        <!-- Top Performer -->
-        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
-          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Top Performer</span>
-          <div class="text-[11px] font-bold text-white truncate mt-1" id="top-player-name">Loading...</div>
-          <span class="text-[9px] text-brand-orange font-bold mt-1" id="top-player-val">—</span>
-        </div>
-        <!-- Best Team -->
-        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
-          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Best Team</span>
-          <div class="text-[11px] font-bold text-white truncate mt-1" id="top-team-name">Loading...</div>
-          <span class="text-[9px] text-brand-orange font-bold mt-1" id="top-team-val">—</span>
-        </div>
-        <!-- Average CPI -->
-        <div class="glass-card p-3 flex flex-col justify-between border border-brand-border min-h-[85px]">
-          <span class="text-[8px] font-bold text-brand-muted uppercase tracking-wider">Average CPI</span>
-          <div class="text-[14px] font-black mt-1" id="avg-cpi-val">—</div>
-          <span class="text-[8px] text-brand-muted mt-0.5">Academy CPI</span>
-        </div>
+    <!-- Summary KPIs -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div class="glass-card kpi-card" style="min-height:130px;">
+        <span class="kpi-label">Top Athlete</span>
+        <div class="text-base font-black text-white truncate mt-3" id="top-player-name">Loading...</div>
+        <span class="text-sm text-brand-orange font-bold mt-1" id="top-player-val">—</span>
       </div>
+      <div class="glass-card kpi-card" style="min-height:130px;">
+        <span class="kpi-label">Leading Team</span>
+        <div class="text-base font-black text-white truncate mt-3" id="top-team-name">Loading...</div>
+        <span class="text-sm text-brand-orange font-bold mt-1" id="top-team-val">—</span>
+      </div>
+      <div class="glass-card kpi-card glass-card-featured" style="min-height:130px;">
+        <span class="kpi-label">Academy CPI</span>
+        <div class="kpi-value mt-3" id="avg-cpi-val" style="font-size:2rem;">—</div>
+        <span class="kpi-sublabel">Average Performance Index</span>
+      </div>
+    </div>
 
-      <!-- Generator Forms -->
-      <div class="space-y-4">
-        
-        <!-- Player Report Generator Card -->
-        <div class="glass-card p-4 border border-brand-border">
-          <div class="flex items-center gap-3.5 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center text-brand-orange text-sm">👤</div>
-            <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Player Report Generator</h3>
-              <p class="text-[9px] text-brand-muted">Individual scoring & indices</p>
+    <div class="content-grid-3">
+
+      <!-- Left Column: Report Selectors & Configuration -->
+      <div class="space-y-5">
+
+        <div class="glass-card p-6">
+          <div class="page-eyebrow" style="margin-bottom:0.75rem;">Report Scope</div>
+          
+          <!-- Tab Headers -->
+          <div class="flex border-b border-white/5 pb-px gap-4 mb-5">
+            <button id="tab-coach" class="text-xs font-black uppercase tracking-wider pb-2 border-b-2 border-brand-orange text-white transition-all click-bounce">Coach</button>
+            <button id="tab-team" class="text-xs font-black uppercase tracking-wider pb-2 border-b-2 border-transparent text-brand-muted hover:text-white transition-all click-bounce">Team</button>
+            <button id="tab-player" class="text-xs font-black uppercase tracking-wider pb-2 border-b-2 border-transparent text-brand-muted hover:text-white transition-all click-bounce">Player</button>
+          </div>
+
+          <!-- Coach Report Panel -->
+          <div id="panel-coach" class="space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="kpi-card-icon" style="width:36px;height:36px;font-size:0.875rem;">👑</div>
+              <div>
+                <h3 class="text-xs font-black text-white uppercase tracking-wider">Coach Overview</h3>
+                <p class="text-[10px] text-brand-muted mt-0.5">Academy-wide CPI & TPI reports</p>
+              </div>
+            </div>
+            <p class="text-[10px] text-brand-muted leading-relaxed">Compiles consolidated analytics across all squads and registered players in the academy.</p>
+            <button id="gen-coach-btn" class="btn-primary w-full click-bounce">Generate Academy Report</button>
+          </div>
+
+          <!-- Team Report Panel -->
+          <div id="panel-team" class="hidden space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="kpi-card-icon" style="width:36px;height:36px;font-size:0.875rem;">🛡️</div>
+              <div>
+                <h3 class="text-xs font-black text-white uppercase tracking-wider">Team Overview</h3>
+                <p class="text-[10px] text-brand-muted mt-0.5">Squad-level KPI metrics</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <select id="report-team" class="app-select">
+                <option value="">Select Team</option>
+              </select>
+              <button id="gen-team-btn" class="btn-primary w-full click-bounce">Generate Team Report</button>
             </div>
           </div>
-          <div class="flex flex-col gap-3">
-            <select id="report-player" class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
-              <option value="">Select Player</option>
-            </select>
-            <button id="gen-player-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">
-              Generate Player Report
-            </button>
-          </div>
-        </div>
 
-        <!-- Team Report Generator Card -->
-        <div class="glass-card p-4 border border-brand-border">
-          <div class="flex items-center gap-3.5 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center text-brand-orange text-sm">🛡️</div>
-            <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Team Report Generator</h3>
-              <p class="text-[9px] text-brand-muted">Consolidated team squads indices</p>
+          <!-- Player Report Panel -->
+          <div id="panel-player" class="hidden space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="kpi-card-icon" style="width:36px;height:36px;font-size:0.875rem;">👤</div>
+              <div>
+                <h3 class="text-xs font-black text-white uppercase tracking-wider">Player Deep-Dive</h3>
+                <p class="text-[10px] text-brand-muted mt-0.5">Individual athlete index logs</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <select id="report-player" class="app-select">
+                <option value="">Select Player</option>
+              </select>
+              <button id="gen-player-btn" class="btn-primary w-full click-bounce">Generate Player Report</button>
             </div>
           </div>
-          <div class="flex flex-col gap-3">
-            <select id="report-team" class="w-full bg-[#0d0d0d] border border-brand-border rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-brand-orange transition-all">
-              <option value="">Select Team</option>
-            </select>
-            <button id="gen-team-btn" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-extrabold text-xs py-3 rounded-xl transition-all click-bounce">
-              Generate Team Report
-            </button>
+
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="page-eyebrow" style="margin-bottom:0.75rem;">History</div>
+          <h3 class="text-xs font-black text-white uppercase tracking-wider mb-4">Recent Reports</h3>
+          <div id="recent-reports-list" class="space-y-2">
+            <div class="text-xs text-brand-muted py-2">No reports compiled yet.</div>
           </div>
         </div>
 
       </div>
 
-      <!-- Recent Reports Section -->
-      <div class="space-y-3">
-        <h3 class="text-xs font-bold text-brand-muted uppercase tracking-widest">Recent Reports</h3>
-        <div id="recent-reports-list" class="flex flex-col gap-2">
-          <!-- Populated via localStorage history -->
-          <div class="text-[10px] text-brand-muted py-2">No recent reports generated.</div>
+      <!-- Right Column: Compiled Report Visualization -->
+      <div class="space-y-5">
+        <div id="report-output" class="space-y-5"></div>
+
+        <div id="reports-empty" class="glass-card empty-state">
+          <div class="empty-state-icon">📊</div>
+          <h3>Awaiting Generation Selection</h3>
+          <p>Choose the Coach, Team, or Player scope from the scope menu to build interactive index logs, charts, and recommendations templates.</p>
+          <button id="gen-default-btn" class="btn-primary click-bounce">Compile Academy Overview</button>
         </div>
       </div>
 
-      <!-- Output Section -->
-      <div id="report-output" class="space-y-4"></div>
+    </div>
 
-      <!-- Empty State -->
-      <div id="reports-empty" class="glass-card p-8 text-center border border-brand-border">
-        <div class="text-4xl mb-3">📊</div>
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Awaiting Generation</h3>
-        <p class="text-[10px] text-brand-muted mt-2 max-w-xs mx-auto">Select a player or squad to calculate live rankings and index analysis.</p>
-      </div>
-
-    </main>
-
-  </div>
+  </main>
 
   <script type="module" src="js/reports.js"></script>
 </body>

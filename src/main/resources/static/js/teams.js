@@ -9,6 +9,7 @@ requireAuth();
 renderNavbar('teams.html');
 
 let allTeams = [];
+let allPlayers = [];
 let editingId = null;
 
 const listEl      = document.getElementById('teams-list');
@@ -32,10 +33,40 @@ function closeModal() {
 
 async function loadTeams() {
   try {
-    allTeams = await api.teams.getAll();
-    renderTeams(allTeams);
+    // Parallel fetching of teams and roster
+    [allTeams, allPlayers] = await Promise.all([
+      api.teams.getAll(),
+      api.players.getAll()
+    ]);
+    
+    // Fetch detailed reports for all teams in parallel to compute real TPI, PPI, MPI
+    const teamReportsPromises = allTeams.map(t => api.reports.team(t.id).catch(() => []));
+    const teamReportsList = await Promise.all(teamReportsPromises);
+
+    const teamsWithScores = allTeams.map((t, idx) => {
+      const playersData = teamReportsList[idx];
+      let ppiSum = 0, ppiCount = 0;
+      let mpiSum = 0, mpiCount = 0;
+      let cpiSum = 0, cpiCount = 0;
+
+      playersData.forEach(p => {
+        if (p.averagePpi) { ppiSum += p.averagePpi; ppiCount++; }
+        if (p.averageMpi) { mpiSum += p.averageMpi; mpiCount++; }
+        if (p.cpi) { cpiSum += p.cpi; cpiCount++; }
+      });
+
+      return {
+        ...t,
+        tpi: cpiCount > 0 ? (cpiSum / cpiCount) : null,
+        avgPpi: ppiCount > 0 ? (ppiSum / ppiCount) : null,
+        avgMpi: mpiCount > 0 ? (mpiSum / mpiCount) : null,
+        playerCount: playersData.length
+      };
+    });
+
+    renderTeams(teamsWithScores);
   } catch (e) {
-    showToast('Failed to load teams', 'error');
+    showToast('Failed to load squads', 'error');
   }
 }
 
@@ -46,26 +77,61 @@ function renderTeams(teams) {
     return;
   }
   emptyEl.classList.add('hidden');
-  listEl.innerHTML = teams.map(t => `
-    <div class="bg-brand-card border border-brand-border rounded-2xl px-5 py-4 flex items-center justify-between gap-4 hover:border-brand-orange/40 transition-all duration-200" style="box-shadow:0 4px 20px rgba(0,0,0,0.4)">
-      <div class="flex items-center gap-4 min-w-0">
-        <div class="w-10 h-10 flex-shrink-0 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-lg">🛡️</div>
-        <div class="min-w-0">
-          <div class="font-bold text-white text-sm truncate">${t.name}</div>
-          <div class="text-brand-muted text-xs mt-0.5 truncate">${t.description || 'No description'}</div>
+  
+  listEl.innerHTML = teams.map(t => {
+    const tpiStr = t.tpi ? t.tpi.toFixed(1) : '—';
+    const tpiColor = t.tpi >= 7.5 ? 'text-green-400 bg-green-500/10 border-green-500/20' : (t.tpi >= 5.0 ? 'text-brand-orange bg-brand-orange/10 border-brand-orange/20' : 'text-gray-400 bg-white/5 border-white/5');
+    
+    const ppiStr = t.avgPpi ? t.avgPpi.toFixed(1) : '—';
+    const mpiStr = t.avgMpi ? t.avgMpi.toFixed(1) : '—';
+
+    return `
+      <div class="glass-card p-6 md:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div class="flex items-start gap-4 min-w-0">
+          <!-- Team Logo Shield -->
+          <div class="w-14 h-14 bg-brand-orange/10 border border-brand-orange/20 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
+            🛡️
+          </div>
+          <div class="min-w-0">
+            <h3 class="text-base font-black text-white tracking-tight truncate">${t.name}</h3>
+            <p class="text-xs text-brand-muted mt-1 truncate">${t.description || 'No description provided'}</p>
+            <div class="flex flex-wrap items-center gap-2 mt-3">
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-gray-300 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5 uppercase tracking-wider">
+                🏃 ${t.playerCount} Players
+              </span>
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-black ${tpiColor} px-3 py-1.5 rounded-xl border uppercase tracking-wider">
+                🛡️ TPI: ${tpiStr}
+              </span>
+              ${t.avgPpi ? `
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-orange bg-brand-orange/5 border border-brand-orange/10 px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                🎯 PPI: ${ppiStr}
+              </span>` : ''}
+              ${t.avgMpi ? `
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-blue-400 bg-blue-400/5 border border-blue-400/10 px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                🏏 MPI: ${mpiStr}
+              </span>` : ''}
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="flex gap-2 flex-shrink-0">
-        <button onclick="editTeam(${t.id})"
-          class="text-xs font-bold px-3 py-1.5 rounded-lg border border-brand-border text-gray-300 hover:border-brand-orange hover:text-brand-orange transition-all">
-          Edit
-        </button>
-        <button onclick="deleteTeam(${t.id}, '${t.name.replace(/'/g,"\\'")}'')"
-          class="text-xs font-bold px-3 py-1.5 rounded-lg border border-red-900/40 text-red-400 hover:bg-red-950/20 transition-all">
-          Delete
-        </button>
-      </div>
-    </div>`).join('');
+        
+        <!-- Quick Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2 sm:self-center">
+          <a href="reports.html" 
+             onclick="localStorage.setItem('reports_selected_team', ${t.id})"
+             class="text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider text-center">
+            Report
+          </a>
+          <button onclick="editTeam(${t.id})" 
+                   class="text-[10px] font-black bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Edit
+          </button>
+          <button onclick="deleteTeam(${t.id}, '${t.name.replace(/'/g,"\\'")}')" 
+                   class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Delete
+          </button>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 searchInput?.addEventListener('input', () => {
@@ -128,7 +194,6 @@ document.querySelectorAll('.modal-close, .btn-cancel').forEach(btn =>
   btn.addEventListener('click', closeModal)
 );
 
-// Close on backdrop click
 modalEl.addEventListener('click', (e) => { if (e.target === modalEl) closeModal(); });
 
 loadTeams();
