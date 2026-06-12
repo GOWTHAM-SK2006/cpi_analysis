@@ -29,7 +29,7 @@ async function request(method, path, body = null) {
       console.warn('[API Response] 401 Unauthorized detected. Token may be expired or invalid. Clearing session and redirecting to login.html.');
       localStorage.clear();
       window.location.href = '/login.html';
-      return;
+      throw new Error('Session expired. Please sign in again.');
     }
 
     const data = res.headers.get('content-type')?.includes('application/json')

@@ -44,12 +44,26 @@
       </button>
     </div>
 
-    <div class="search-wrapper">
-      <span class="search-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      </span>
-      <input id="search-input" type="text" placeholder="Search by name or squad..." class="app-input">
+    <div class="filter-bar">
+      <div class="search-wrapper filter-bar-search">
+        <span class="search-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        <input id="search-input" type="text" placeholder="Search by name or squad..." class="app-input">
+      </div>
+      <select id="filter-team" class="app-select filter-select" aria-label="Filter by squad">
+        <option value="">All Squads</option>
+      </select>
+      <select id="filter-role" class="app-select filter-select" aria-label="Filter by role">
+        <option value="">All Roles</option>
+        <option>Batsman</option>
+        <option>Bowler</option>
+        <option>All-Rounder</option>
+        <option>Wicketkeeper</option>
+      </select>
     </div>
+
+    <div id="players-meta"></div>
 
     <div id="players-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
 

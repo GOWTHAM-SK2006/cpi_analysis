@@ -1,5 +1,5 @@
 /**
- * players.js — Players page logic
+ * players.js — Players page logic (premium UI)
  */
 import { requireAuth } from './auth.js';
 import { api } from './api.js';
@@ -16,20 +16,30 @@ const listEl      = document.getElementById('players-list');
 const emptyEl     = document.getElementById('players-empty');
 const modalEl     = document.getElementById('player-modal');
 const modalTitle  = document.getElementById('modal-title');
-const searchInput = document.getElementById('search-input');
-const form        = document.getElementById('player-form');
-const teamSelect  = document.getElementById('player-team');
+const searchInput  = document.getElementById('search-input');
+const filterTeam   = document.getElementById('filter-team');
+const filterRole   = document.getElementById('filter-role');
+const form         = document.getElementById('player-form');
+const teamSelect   = document.getElementById('player-team');
 
-function openModal() {
-  modalEl.classList.remove('hidden');
-  modalEl.classList.add('flex');
-}
-function closeModal() {
-  modalEl.classList.add('hidden');
-  modalEl.classList.remove('flex');
+function openModal() { modalEl.classList.remove('hidden'); modalEl.classList.add('flex'); }
+function closeModal() { modalEl.classList.add('hidden'); modalEl.classList.remove('flex'); }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function roleAvatarClass(role) {
+  if (!role) return 'role-avatar--batsman';
+  const r = role.toLowerCase();
+  if (r.includes('bowl')) return 'role-avatar--bowler';
+  if (r.includes('all') || r.includes('rounder')) return 'role-avatar--allrounder';
+  if (r.includes('keep') || r.includes('wicket')) return 'role-avatar--keeper';
+  return 'role-avatar--batsman';
 }
 
-// Role badge styling
+function playerInitials(name) {
+  if (!name) return '??';
+  return name.trim().split(/\s+/).slice(0, 2).map(n => n.charAt(0)).join('').toUpperCase();
+}
+
 function roleBadge(role) {
   const colors = {
     'Batsman':     'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -40,11 +50,42 @@ function roleBadge(role) {
   return colors[role] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
 }
 
+function performanceBadge(role) {
+  const labels = {
+    'Batsman': 'Powerplay',
+    'Bowler': 'Strike Rate',
+    'All-Rounder': 'Versatility',
+    'Wicketkeeper': 'Glove Work',
+  };
+  return labels[role] || 'Potential';
+}
+
+function applyFilters() {
+  const q = searchInput?.value.toLowerCase() || '';
+  const teamId = filterTeam?.value || '';
+  const role = filterRole?.value || '';
+  const filtered = allPlayers.filter(p => {
+    const matchesSearch = !q || p.name.toLowerCase().includes(q) || p.teamName.toLowerCase().includes(q);
+    const matchesTeam = !teamId || String(p.teamId) === teamId;
+    const matchesRole = !role || p.role === role;
+    return matchesSearch && matchesTeam && matchesRole;
+  });
+  renderPlayers(filtered);
+}
+
+function populateFilterTeamSelect() {
+  if (!filterTeam) return;
+  filterTeam.innerHTML = '<option value="">All Squads</option>' +
+    allTeams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+}
+
+// ── Data load ─────────────────────────────────────────────────────────────────
 async function init() {
   try {
     [allTeams, allPlayers] = await Promise.all([api.teams.getAll(), api.players.getAll()]);
     populateTeamSelect();
-    renderPlayers(allPlayers);
+    populateFilterTeamSelect();
+    applyFilters();
   } catch {
     showToast('Failed to load roster data', 'error');
   }
@@ -55,71 +96,106 @@ function populateTeamSelect() {
     allTeams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
 }
 
+// ── Render ────────────────────────────────────────────────────────────────────
 function renderPlayers(players) {
+  const metaEl = document.getElementById('players-meta');
+
   if (!players.length) {
     listEl.innerHTML = '';
+    if (metaEl) metaEl.innerHTML = '';
     emptyEl.classList.remove('hidden');
     return;
   }
   emptyEl.classList.add('hidden');
 
-  listEl.innerHTML = players.map(p => `
-    <div class="glass-card p-6 flex flex-col justify-between gap-6">
-      
-      <!-- Top Section: Avatar, Bio and Role -->
-      <div class="flex items-start gap-4">
-        <!-- Jersey representation -->
-        <div class="w-12 h-12 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-brand-orange font-black text-sm flex-shrink-0">
-          #${p.id}
+  // Stat strip
+  if (metaEl) {
+    const teamSet = new Set(players.map(p => p.teamId));
+    const roleCount = players.reduce((acc, p) => {
+      acc[p.role] = (acc[p.role] || 0) + 1;
+      return acc;
+    }, {});
+    const topRoles = Object.entries(roleCount).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+    metaEl.innerHTML = `
+      <div class="stat-strip mb-1">
+        <div class="stat-strip-item">
+          <span class="stat-strip-label">Total Athletes</span>
+          <span class="stat-strip-value">${players.length}</span>
         </div>
-        <div class="min-w-0 flex-grow">
-          <div class="flex items-start justify-between gap-2">
-            <h3 class="text-base font-black text-white truncate tracking-tight">${p.name}</h3>
-            <span class="inline-block text-[9px] font-black px-2 py-1 rounded-lg border uppercase tracking-wider ${roleBadge(p.role)}">
-              ${p.role}
-            </span>
+        <div class="stat-strip-divider"></div>
+        <div class="stat-strip-item">
+          <span class="stat-strip-label">Squads</span>
+          <span class="stat-strip-value">${teamSet.size}</span>
+        </div>
+        ${topRoles.length ? '<div class="stat-strip-divider"></div>' : ''}
+        ${topRoles.map(([role, count], i) => `
+          ${i > 0 ? '<div class="stat-strip-divider"></div>' : ''}
+          <div class="stat-strip-item">
+            <span class="stat-strip-label">${role.split('-')[0]}</span>
+            <span class="stat-strip-value">${count}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  // Player cards
+  listEl.innerHTML = players.map(p => {
+    const avatarCls = roleAvatarClass(p.role);
+    const badgeCls  = roleBadge(p.role);
+    const inits     = playerInitials(p.name);
+
+    return `
+      <div class="glass-card p-5 flex flex-col gap-4">
+
+        <!-- Avatar + Name -->
+        <div class="flex items-start gap-3">
+          <div class="role-avatar ${avatarCls}">${inits}</div>
+          <div class="flex-grow min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="text-sm font-black text-white truncate tracking-tight leading-tight">${p.name}</h3>
+              <span class="inline-block text-[9px] font-black px-2 py-0.5 rounded-lg border uppercase tracking-wider flex-shrink-0 ${badgeCls}">
+                ${p.role}
+              </span>
+            </div>
+            <p class="text-[10px] text-brand-muted mt-1 font-bold uppercase tracking-wider truncate">
+              ${p.teamName} · Age ${p.age}
+            </p>
           </div>
-          <p class="text-xs text-brand-muted mt-1 font-bold uppercase tracking-wider">${p.teamName} · Age ${p.age}</p>
         </div>
-      </div>
 
-      <!-- Center details: Specs styles -->
-      <div class="grid grid-cols-2 gap-2 border-y border-white/5 py-4">
-        <div>
-          <span class="block text-[8px] font-bold text-brand-muted uppercase tracking-widest">Batting</span>
-          <span class="text-xs font-semibold text-gray-200 mt-0.5 block truncate">${p.battingStyle || 'None'}</span>
+        <!-- Bio Pills + Performance -->
+        <div class="player-bio-strip">
+          <span class="pill-tag">🏏 ${p.battingStyle || 'N/A'}</span>
+          <span class="pill-tag">⚡ ${p.bowlingStyle || 'None'}</span>
+          <span class="pill-tag pill-tag--accent">📊 ${performanceBadge(p.role)}</span>
         </div>
-        <div>
-          <span class="block text-[8px] font-bold text-brand-muted uppercase tracking-widest">Bowling</span>
-          <span class="text-xs font-semibold text-gray-200 mt-0.5 block truncate">${p.bowlingStyle || 'None'}</span>
+
+        <div class="border-t border-white/5"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2">
+          <a href="player-detail.html?id=${p.id}"
+             class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Profile
+          </a>
+          <button onclick="editPlayer(${p.id})"
+                  class="text-[10px] font-black bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Edit
+          </button>
+          <button onclick="deletePlayer(${p.id}, '${p.name.replace(/'/g, "\\'")}')"
+                  class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Del
+          </button>
         </div>
-      </div>
 
-      <!-- Action items -->
-      <div class="flex items-center gap-2">
-        <a href="player-detail.html?id=${p.id}" 
-           class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
-          Profile
-        </a>
-        <button onclick="editPlayer(${p.id})" 
-                class="text-[10px] font-black bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
-          Edit
-        </button>
-        <button onclick="deletePlayer(${p.id}, '${p.name.replace(/'/g,"\\'")}')" 
-                class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
-          Delete
-        </button>
-      </div>
-
-    </div>`).join('');
+      </div>`;
+  }).join('');
 }
 
-searchInput?.addEventListener('input', () => {
-  const q = searchInput.value.toLowerCase();
-  renderPlayers(allPlayers.filter(p =>
-    p.name.toLowerCase().includes(q) || p.teamName.toLowerCase().includes(q)
-  ));
-});
+// ── Events ────────────────────────────────────────────────────────────────────
+searchInput?.addEventListener('input', applyFilters);
+filterTeam?.addEventListener('change', applyFilters);
+filterRole?.addEventListener('change', applyFilters);
 
 document.getElementById('add-player-btn').addEventListener('click', () => {
   editingId = null;
@@ -133,20 +209,40 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const submitBtn = form.querySelector('[type="submit"]');
   submitBtn.textContent = 'Saving...'; submitBtn.disabled = true;
+
+  const teamId = parseInt(document.getElementById('player-team').value, 10);
+  if (!teamId) {
+    showToast('Please select a squad for this athlete', 'error');
+    submitBtn.textContent = 'Save Player'; submitBtn.disabled = false;
+    return;
+  }
+
   const body = {
     name:         document.getElementById('player-name').value.trim(),
-    age:          parseInt(document.getElementById('player-age').value),
+    age:          parseInt(document.getElementById('player-age').value, 10),
     role:         document.getElementById('player-role').value,
     battingStyle: document.getElementById('player-batting').value,
     bowlingStyle: document.getElementById('player-bowling').value,
-    teamId:       parseInt(document.getElementById('player-team').value),
+    teamId,
   };
+
   try {
-    if (editingId) { await api.players.update(editingId, body); showToast('Player updated ✓'); }
-    else           { await api.players.create(body);            showToast('Player added ✓'); }
+    const saved = editingId
+      ? await api.players.update(editingId, body)
+      : await api.players.create(body);
+
+    try {
+      allPlayers = await api.players.getAll();
+    } catch (reloadErr) {
+      const idx = allPlayers.findIndex(p => p.id === saved.id);
+      if (idx >= 0) allPlayers[idx] = saved;
+      else allPlayers.push(saved);
+    }
+
+    populateFilterTeamSelect();
     closeModal();
-    allPlayers = await api.players.getAll();
-    renderPlayers(allPlayers);
+    applyFilters();
+    showToast(editingId ? 'Player updated ✓' : 'Player added ✓');
   } catch (err) {
     showToast(err.message, 'error');
   } finally {
@@ -174,7 +270,7 @@ window.deletePlayer = async (id, name) => {
     await api.players.delete(id);
     showToast('Player deleted');
     allPlayers = await api.players.getAll();
-    renderPlayers(allPlayers);
+    applyFilters();
   } catch (err) { showToast(err.message, 'error'); }
 };
 

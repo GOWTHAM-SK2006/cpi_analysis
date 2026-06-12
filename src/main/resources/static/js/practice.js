@@ -1,5 +1,5 @@
 /**
- * practice.js — Practice Sessions + PPI Score logic
+ * practice.js — Practice Sessions + PPI Score logic (premium UI)
  */
 import { requireAuth } from './auth.js';
 import { api } from './api.js';
@@ -17,7 +17,16 @@ if (isPracticeScore) {
   initSessionsPage();
 }
 
-// ── SESSIONS PAGE ────────────────────────────────────────────────────────────
+// ── Helper: format ISO date → "Jun 12, 2026" ──────────────────────────────────
+function formatDate(iso) {
+  if (!iso) return '';
+  const parts = iso.split('-');
+  if (parts.length < 3) return iso;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(parts[1]) - 1]} ${parseInt(parts[2])}, ${parts[0]}`;
+}
+
+// ── SESSIONS PAGE ─────────────────────────────────────────────────────────────
 async function initSessionsPage() {
   const modalEl = document.getElementById('session-modal');
 
@@ -60,7 +69,7 @@ async function initSessionsPage() {
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
-      btn.textContent = 'Create Session'; btn.disabled = false;
+      btn.textContent = 'Save Log'; btn.disabled = false;
     }
   });
 
@@ -73,41 +82,79 @@ async function initSessionsPage() {
 function renderSessions(sessions) {
   const listEl  = document.getElementById('sessions-list');
   const emptyEl = document.getElementById('sessions-empty');
+  const metaEl  = document.getElementById('sessions-meta');
 
   if (!sessions.length) {
     listEl.innerHTML = '';
+    if (metaEl) metaEl.innerHTML = '';
     emptyEl.classList.remove('hidden');
     return;
   }
   emptyEl.classList.add('hidden');
 
+  // ── Stat Strip ──────────────────────────────────────────────────────────────
+  if (metaEl) {
+    const teamSet = new Set(sessions.map(s => s.teamId));
+    const latestDate = formatDate(
+      sessions.slice().sort((a, b) => b.date.localeCompare(a.date))[0]?.date
+    );
+
+    metaEl.innerHTML = `
+      <div class="stat-strip mb-1">
+        <div class="stat-strip-item">
+          <span class="stat-strip-label">Total Sessions</span>
+          <span class="stat-strip-value">${sessions.length}</span>
+        </div>
+        <div class="stat-strip-divider"></div>
+        <div class="stat-strip-item">
+          <span class="stat-strip-label">Squads</span>
+          <span class="stat-strip-value">${teamSet.size}</span>
+        </div>
+        <div class="stat-strip-divider"></div>
+        <div class="stat-strip-item">
+          <span class="stat-strip-label">Latest</span>
+          <span class="stat-strip-value" style="font-size:0.75rem;">${latestDate}</span>
+        </div>
+        <div class="live-indicator" style="margin-left:auto;">
+          <span class="live-dot"></span>
+          PPI Active
+        </div>
+      </div>`;
+  }
+
+  // ── Session Cards ────────────────────────────────────────────────────────────
   listEl.innerHTML = sessions.map(s => `
-    <div class="glass-card p-6 md:p-8 flex flex-col justify-between gap-6">
-      
-      <!-- Top Session Info -->
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 bg-brand-orange/15 border border-brand-orange/20 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
-          🎯
-        </div>
-        <div class="min-w-0">
-          <h3 class="text-base font-black text-white tracking-tight truncate">${s.teamName}</h3>
-          <p class="text-xs text-brand-muted mt-1">📅 ${s.date}</p>
-          ${s.notes ? `<p class="text-xs text-brand-muted mt-2 italic bg-white/5 border border-white/5 p-2.5 rounded-xl">${s.notes}</p>` : ''}
-        </div>
-      </div>
+    <div class="glass-card overflow-hidden flex">
+      <div class="session-card-line session-card-line--practice"></div>
+      <div class="p-5 flex flex-col gap-4 flex-grow min-w-0">
 
-      <!-- Action items -->
-      <div class="flex items-center gap-2">
-        <a href="practice-score.html?sessionId=${s.id}&teamId=${s.teamId}" 
-           class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
-          Score Players
-        </a>
-        <button onclick="deleteSession(${s.id})" 
-                class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
-          Delete
-        </button>
-      </div>
+        <!-- Header -->
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 bg-brand-orange/10 border border-brand-orange/20 rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+            🎯
+          </div>
+          <div class="flex-grow min-w-0">
+            <h3 class="text-sm font-black text-white tracking-tight truncate">${s.teamName}</h3>
+            <div class="date-chip mt-1.5">📅 ${formatDate(s.date)}</div>
+          </div>
+          <span class="text-[9px] font-bold text-brand-orange bg-brand-orange/10 border border-brand-orange/15 px-2 py-1 rounded-lg uppercase tracking-wider flex-shrink-0">PPI</span>
+        </div>
 
+        ${s.notes ? `<div class="session-notes">${s.notes}</div>` : ''}
+
+        <!-- Actions -->
+        <div class="flex gap-2 mt-auto">
+          <a href="practice-score.html?sessionId=${s.id}&teamId=${s.teamId}"
+             class="flex-1 text-center text-[10px] font-black bg-brand-orange hover:bg-brand-orangeHover text-white px-4 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Score Players
+          </a>
+          <button onclick="deleteSession(${s.id})"
+                  class="text-[10px] font-black bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 px-3 py-2.5 rounded-xl transition-all click-bounce uppercase tracking-wider">
+            Delete
+          </button>
+        </div>
+
+      </div>
     </div>`).join('');
 }
 
@@ -120,7 +167,7 @@ window.deleteSession = async (id) => {
   } catch (err) { showToast(err.message, 'error'); }
 };
 
-// ── SCORE PAGE ───────────────────────────────────────────────────────────────
+// ── SCORE PAGE ────────────────────────────────────────────────────────────────
 async function initScorePage() {
   const params    = new URLSearchParams(window.location.search);
   const sessionId = params.get('sessionId');
@@ -171,8 +218,8 @@ async function initScorePage() {
       </div>`).join('');
 
     const badge = ex
-      ? `<span class="text-xs font-bold bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-xl uppercase">PPI: ${ex.ppi.toFixed(1)}</span>`
-      : `<span class="text-xs font-bold bg-white/5 border border-white/5 text-brand-muted px-3 py-1 rounded-xl uppercase">Not Scored</span>`;
+      ? `<span class="score-badge score-badge--${ex.ppi >= 7.5 ? 'high' : ex.ppi >= 5 ? 'mid' : 'low'}">PPI ${ex.ppi.toFixed(1)}</span>`
+      : `<span class="score-badge score-badge--none">Not Scored</span>`;
 
     return `
       <div class="glass-card p-6 md:p-8">
