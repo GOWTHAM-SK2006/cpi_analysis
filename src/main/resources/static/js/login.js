@@ -36,9 +36,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const data = await api.auth.login({ email, password });
     console.log('[Login] API call succeeded. Response payload:', data);
     
-    if (data && data.token) {
+    if (data?.token) {
       console.log(`[Login] Saving session: Token = ${data.token.substring(0, 10)}...`);
       saveSession(data);
+      if (!localStorage.getItem('cpi_token')) {
+        throw new Error('Could not save session. Check browser storage settings.');
+      }
       console.log('[Login] Session saved. Redirecting to dashboard.html...');
       window.location.href = 'dashboard.html';
     } else {

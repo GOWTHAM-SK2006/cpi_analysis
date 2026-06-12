@@ -26,10 +26,21 @@ export function clearSession() {
   ['cpi_token','cpi_name','cpi_email','cpi_academy'].forEach(k => localStorage.removeItem(k));
 }
 
+function isValidToken(token) {
+  return typeof token === 'string'
+    && token.length > 20
+    && token !== 'undefined'
+    && token !== 'null';
+}
+
 export function isLoggedIn() {
   const token = localStorage.getItem('cpi_token');
-  const loggedIn = !!token;
-  console.log(`[Auth] Checking login state. Token present: ${loggedIn}`);
+  const loggedIn = isValidToken(token);
+  if (token && !loggedIn) {
+    console.warn('[Auth] Invalid token in localStorage; clearing session.');
+    clearSession();
+  }
+  console.log(`[Auth] Checking login state. Token valid: ${loggedIn}`);
   return loggedIn;
 }
 

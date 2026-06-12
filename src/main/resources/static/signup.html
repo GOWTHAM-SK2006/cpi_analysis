@@ -101,7 +101,11 @@
           email: document.getElementById('email').value.trim(),
           password: document.getElementById('password').value,
         });
+        if (!data?.token) throw new Error('No authentication token returned by server.');
         saveSession(data);
+        if (!localStorage.getItem('cpi_token')) {
+          throw new Error('Could not save session. Check browser storage settings.');
+        }
         window.location.href = 'dashboard.html';
       } catch (err) {
         errEl.textContent = err.message || 'Signup failed';

@@ -25,16 +25,16 @@ async function request(method, path, body = null) {
     const res = await fetch(`${API_BASE}${path}`, options);
     console.log(`[API Response] Received response for ${path} -> Status: ${res.status} ${res.statusText}`);
 
-    if (res.status === 401) {
-      console.warn('[API Response] 401 Unauthorized detected. Token may be expired or invalid. Clearing session and redirecting to login.html.');
+    const data = res.headers.get('content-type')?.includes('application/json')
+      ? await res.json()
+      : null;
+
+    if (res.status === 401 || (res.status === 403 && token)) {
+      console.warn(`[API Response] ${res.status} auth failure. Clearing session and redirecting to login.`);
       localStorage.clear();
       window.location.href = '/login.html';
       throw new Error('Session expired. Please sign in again.');
     }
-
-    const data = res.headers.get('content-type')?.includes('application/json')
-      ? await res.json()
-      : null;
 
     if (!res.ok) {
       console.error(`[API Error] Request failed with status ${res.status}. Error payload:`, data);
